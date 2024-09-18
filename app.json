@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#036E74"
     },
     "ios": {
       "supportsTablet": true
@@ -17,8 +17,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#036E74"
+      },
+      "package": "com.tikai7.Deity",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
