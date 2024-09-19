@@ -114,11 +114,11 @@ export default function Info({handleVisible, selectedClient}){
                 </View>
             </View>
 
-
-            <TouchableOpacity onPress={handleUpdateClient} style={{...buttonStyles.secondaryButton, marginBottom:"5%"}}>
+            <View style={{marginVertical:"4%"}}/>
+            <TouchableOpacity onPress={handleUpdateClient} style={{...buttonStyles.secondaryButton, height:50, marginBottom:"3%"}}>
                 <Text style={textStyles.primaryText}>Modifier Client</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{...buttonStyles.secondaryButton, borderColor:PALETTE.error}} onPress={() => deleteClient(selectedClient)}>
+            <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={() => deleteClient(selectedClient)}>
                 <Text style={{...textStyles.secondaryText, color:PALETTE.error}}>Supprimer Client</Text>
             </TouchableOpacity>
         </View>

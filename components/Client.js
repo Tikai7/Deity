@@ -202,10 +202,13 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
         }
     }
 
+
     function handleCake1(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            if (value <= stockGateau || isNaN(value))
+            const totalStock = selectedClient?.nbGateau ? stockGateau + selectedClient.nbGateau : stockGateau
+
+            if (value <= totalStock || isNaN(value))
                 setNbGateau(text === "" ? 0 : value);
             else
                 showMessage({
@@ -219,9 +222,9 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
     function handleCake2(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            console.log(value)
-            console.log(value === NaN)
-            if (value <= stockGateau2 || isNaN(value))
+            const totalStock = selectedClient?.nbGateau2 ? stockGateau2 + selectedClient.nbGateau : stockGateau2
+
+            if (value <= totalStock || isNaN(value))
                 setNbGateau2(text === "" ? 0 : value);
             else
                 showMessage({
@@ -235,7 +238,9 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
     function handleCake3(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            if (value <= stockGateau3 || isNaN(value))
+            const totalStock = selectedClient?.nbGateau3 ? stockGateau3 + selectedClient.nbGateau : stockGateau3
+
+            if (value <= totalStock || isNaN(value))
                 setNbGateau3(text === "" ? 0 : value);
             else
                 showMessage({
