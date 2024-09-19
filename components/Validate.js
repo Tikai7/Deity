@@ -9,16 +9,17 @@ import { Data } from "../context/Data";
 
 
 
-export default function Validate({handleVisible, selectedClient }){
+export default function Validate({handleVisible,handleVisibleParent, selectedClient }){
 
     const {setRefresh} = useContext(Data)
 
     async function deleteClient() {
         await deleteItem(`${selectedClient.key}`)
-        const clientCount = await getMyData(CLIENT_COUNT)
-        await storeMyData(CLIENT_COUNT, clientCount-1)
+        // const clientCount = await getMyData(CLIENT_COUNT)
+        // await storeMyData(CLIENT_COUNT, clientCount-1)
         setRefresh(old=>!old)
         handleVisible()
+        handleVisibleParent()
     }
     
 

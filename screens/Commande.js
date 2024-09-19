@@ -28,13 +28,9 @@ export default function Commande(){
             console.log("[INFO] Client count : ", clientCount)
             let commandes = []
             for (let i = 1; i <= clientCount; i++) {
-                try{
-                    const c = await getMyData(`${i}`)
+                const c = await getMyData(`${i}`)
+                if (c !== null)
                     commandes.push(c)
-                }
-                catch(e){
-                    continue
-                }
             } 
             setClient(commandes)
         }

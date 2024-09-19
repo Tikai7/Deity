@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, Button, Image, ScrollView, Platform, Linking, Modal } from 'react-native';
 import { containerStyles, textStyles, buttonStyles, PALETTE } from '../styles/Styles';
 import MapView, { Marker } from 'react-native-maps';
@@ -42,16 +42,8 @@ export default function Info({handleVisible, selectedClient}){
         return formattedDate
     }
 
-    async function handleValidate(client){
-        handleVisibleValidation()
-    }
-
-    function handleVisibleValidation(){
+    function handleValidate(){
         setVisibleValidation(old=>!old)
-    }
-
-    async function handleValidate(client){
-        handleVisibleValidation()
     }
 
     function handleVisibleClient(){
@@ -77,7 +69,8 @@ export default function Info({handleVisible, selectedClient}){
         </Modal>
         <Modal visible={visibleValidation} animationType="fade" transparent>
             <Validate 
-                handleVisible={handleVisibleValidation} 
+                handleVisible={handleValidate} 
+                handleVisibleParent={handleVisible}
                 selectedClient={selectedClient} 
             />
         </Modal>
@@ -130,7 +123,7 @@ export default function Info({handleVisible, selectedClient}){
             <TouchableOpacity onPress={handleUpdateClient} style={{...buttonStyles.secondaryButton, height:50, marginBottom:"3%"}}>
                 <Text style={textStyles.primaryText}>Modifier Client</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={() => handleValidate(selectedClient)}>
+            <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={handleValidate}>
                 <Text style={{...textStyles.secondaryText, color:PALETTE.error}}>Supprimer Client</Text>
             </TouchableOpacity>
         </View>
