@@ -26,7 +26,7 @@ export default function Acceuil(){
     return(
         <SafeAreaView style={containerStyles.mainContainer}>
 			<Modal visible={visible} animationType='slide' >
-				<Client handleVisible={handleVisible}/>
+				<Client handleVisible={handleVisible} handleVisibleParent={()=>{}}/>
 			</Modal>
 
             <View style={containerStyles.lottieContainer}>

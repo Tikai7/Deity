@@ -4,16 +4,17 @@ import { containerStyles, textStyles, buttonStyles, PALETTE } from '../styles/St
 import MapView, { Marker } from 'react-native-maps';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import { deleteItem, getMyData, storeMyData } from '../utils/DataManager';
 import Client from './Client';
 import { useState } from 'react';
 import { CLIENT_COUNT } from '../utils/Function';
 import { Data } from '../context/Data';
 import { useContext } from 'react';
+import Validate from './Validate';
 
 export default function Info({handleVisible, selectedClient}){
 
     const [visible, setVisible] = useState(false)
+    const [visibleValidation, setVisibleValidation] = useState(false)
     const {setRefresh} = useContext(Data)
 
     const clientCoordinates = {
@@ -32,13 +33,6 @@ export default function Info({handleVisible, selectedClient}){
         Linking.openURL(url);
     }
 
-    async function deleteClient(client) {
-        await deleteItem(`${client.key}`)
-        const clientCount = await getMyData(CLIENT_COUNT)
-        await storeMyData(CLIENT_COUNT, clientCount-1)
-        setRefresh(old=>!old)
-    }
-    
     function convertDate(isoString){
         const date = new Date(isoString);
         const day = String(date.getDate()).padStart(2, '0');
@@ -48,6 +42,17 @@ export default function Info({handleVisible, selectedClient}){
         return formattedDate
     }
 
+    async function handleValidate(client){
+        handleVisibleValidation()
+    }
+
+    function handleVisibleValidation(){
+        setVisibleValidation(old=>!old)
+    }
+
+    async function handleValidate(client){
+        handleVisibleValidation()
+    }
 
     function handleVisibleClient(){
         setRefresh(old=>!old)
@@ -63,10 +68,17 @@ export default function Info({handleVisible, selectedClient}){
         <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"30%", width:"100%"}}>
         <Modal visible={visible} animationType="slide">
             <Client 
+                handleVisibleParent={handleVisible}
                 handleVisible={handleVisibleClient} 
                 selectedClient={selectedClient} 
                 action="Modifier"
                 title='Modifier Client'
+            />
+        </Modal>
+        <Modal visible={visibleValidation} animationType="fade" transparent>
+            <Validate 
+                handleVisible={handleVisibleValidation} 
+                selectedClient={selectedClient} 
             />
         </Modal>
 
@@ -104,12 +116,12 @@ export default function Info({handleVisible, selectedClient}){
                 </View>
 
                 <View style={{ width: "27%", flexDirection: "column" }}>
-                    <Image source={require('../images/gateau3.jpg')} style={containerStyles.cake} />
+                    <Image source={require('../images/gateau2.jpg')} style={containerStyles.cake} />
                     <Text style={textStyles.cakeNumber}>{selectedClient.nbGateau2}</Text>
                 </View>
 
                 <View style={{ width: "27%", flexDirection: "column" }}>
-                    <Image source={require('../images/gateau2.jpg')} style={containerStyles.cake} />
+                    <Image source={require('../images/gateau3.jpg')} style={containerStyles.cake} />
                     <Text style={textStyles.cakeNumber}>{selectedClient.nbGateau3}</Text>
                 </View>
             </View>
@@ -118,7 +130,7 @@ export default function Info({handleVisible, selectedClient}){
             <TouchableOpacity onPress={handleUpdateClient} style={{...buttonStyles.secondaryButton, height:50, marginBottom:"3%"}}>
                 <Text style={textStyles.primaryText}>Modifier Client</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={() => deleteClient(selectedClient)}>
+            <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={() => handleValidate(selectedClient)}>
                 <Text style={{...textStyles.secondaryText, color:PALETTE.error}}>Supprimer Client</Text>
             </TouchableOpacity>
         </View>

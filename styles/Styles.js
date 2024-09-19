@@ -161,7 +161,7 @@ export const textStyles = {
 		marginTop: "5%",
 		borderBottomWidth: 1,
 		borderColor: PALETTE.white,
-		width:"60%",
+		width:"65%",
 		alignSelf:"center",
 	},
 	title:{

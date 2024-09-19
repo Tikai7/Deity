@@ -75,7 +75,6 @@ export default function Stock(){
 
 
 
-
     function handleCake1(text) {
         if (/^\d*$/.test(text)) {
             setNbGateau(text === "" ? 0 : parseInt(text, 10));
@@ -116,26 +115,29 @@ export default function Stock(){
                         <TextInput 
                             keyboardType='numeric' 
                             onChangeText={handleCake1} 
-                            style={{...textStyles.cakeNumber, fontSize:18, width:"30%", marginTop:"5%", marginBottom:"10%",color:PALETTE.white}}
+                            style={{...textStyles.cakeNumber, fontSize:18, width:"35%", marginTop:"5%", marginBottom:"10%",color:PALETTE.white}}
                             defaultValue={nbGateau.toString()}
-                        />
-                    </View>
-                    <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
-                        <Image source={require('../images/gateau3.jpg')} style={{...containerStyles.cake, width:120, height:120}} />
-                        <TextInput 
-                            keyboardType='numeric' 
-                            onChangeText={handleCake2} 
-                            style={{...textStyles.cakeNumber, fontSize:18, width:"30%", marginTop:"5%", marginBottom:"10%",color:PALETTE.white}}
-                            defaultValue={nbGateau2.toString()}
+                            maxLength={5}                        
                         />
                     </View>
                     <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
                         <Image source={require('../images/gateau2.jpg')} style={{...containerStyles.cake, width:120, height:120}} />
                         <TextInput 
                             keyboardType='numeric' 
+                            onChangeText={handleCake2} 
+                            style={{...textStyles.cakeNumber, fontSize:18, width:"35%", marginTop:"5%", marginBottom:"10%",color:PALETTE.white}}
+                            defaultValue={nbGateau2.toString()}
+                            maxLength={5}                        
+                        />
+                    </View>
+                    <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
+                        <Image source={require('../images/gateau3.jpg')} style={{...containerStyles.cake, width:120, height:120}} />
+                        <TextInput 
+                            keyboardType='numeric' 
                             onChangeText={handleCake3} 
-                            style={{...textStyles.cakeNumber, fontSize:18, width:"30%", marginTop:"5%", marginBottom:"10%",color:PALETTE.white}}
+                            style={{...textStyles.cakeNumber, fontSize:18, width:"35%", marginTop:"5%", marginBottom:"10%",color:PALETTE.white}}
                             defaultValue={nbGateau3.toString()}
+                            maxLength={5}                        
                         />
                     </View>
                 </View>

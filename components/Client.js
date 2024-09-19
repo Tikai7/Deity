@@ -13,7 +13,7 @@ import FlashMessage from "react-native-flash-message";
 import { showMessage } from "react-native-flash-message";
 
 
-export default function Client({ handleVisible, handleVisibleInfo, selectedClient, title="Bienvenue à ..." , action="Ajouter"}) {
+export default function Client({ handleVisible, handleVisibleParent, selectedClient, title="Bienvenue à ..." , action="Ajouter"}) {
 
     const [placeholderNom, setPlaceholderNom] = useState("Nom")
     const [placeholderAdresse, setPlaceholderAdresse] = useState("Adresse")
@@ -43,6 +43,7 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
         setTimeout(() => {
             setVisible(false);
             handleVisible();
+            handleVisibleParent()
         } , time);
     }
 
@@ -222,7 +223,7 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
     function handleCake2(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            const totalStock = selectedClient?.nbGateau2 ? stockGateau2 + selectedClient.nbGateau : stockGateau2
+            const totalStock = selectedClient?.nbGateau2 ? stockGateau2 + selectedClient.nbGateau2 : stockGateau2
 
             if (value <= totalStock || isNaN(value))
                 setNbGateau2(text === "" ? 0 : value);
@@ -238,7 +239,7 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
     function handleCake3(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            const totalStock = selectedClient?.nbGateau3 ? stockGateau3 + selectedClient.nbGateau : stockGateau3
+            const totalStock = selectedClient?.nbGateau3 ? stockGateau3 + selectedClient.nbGateau3 : stockGateau3
 
             if (value <= totalStock || isNaN(value))
                 setNbGateau3(text === "" ? 0 : value);
@@ -259,14 +260,14 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
             <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"35%", width:"100%"}}>
             <View style={containerStyles.clientContainer}>
                 <Modal visible={visible} animationType='fade' transparent={true} >
-                    <Check state={state} title={"Client ajouté !"} />
+                    <Check state={state} title={action !== "Modifier" ? "Client ajouté !" : "Client modifié !"} />
                 </Modal>
 
                 <AntDesign name="addusergroup" size={30} color={PALETTE.white} />                
                 <Text style={textStyles.title}>{title}</Text>
 
-                <TextInput onChangeText={(e)=>setNom(e)} placeholder={placeholderNom} style={containerStyles.inputContainer} />
-                <TextInput onChangeText={(e)=>setAdresse(e)} placeholder={placeholderAdresse} style={containerStyles.inputContainer} />
+                <TextInput defaultValue={action==="Modifier" ? placeholderNom : ""} maxLength={30} onChangeText={(e)=>setNom(e)} placeholder={placeholderNom} style={containerStyles.inputContainer} />
+                <TextInput defaultValue={action==="Modifier" ? placeholderAdresse: ""} maxLength={40} onChangeText={(e)=>setAdresse(e)} placeholder={placeholderAdresse} style={containerStyles.inputContainer} />
 
                 <View style={containerStyles.cakeContainer}>
                     <View style={{ width: "27%", flexDirection: "column" }}>
@@ -276,16 +277,7 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
                             onChangeText={handleCake1} 
                             style={textStyles.cakeNumber}
                             placeholder={placeholderGateau1}
-                        />
-                    </View>
-
-                    <View style={{ width: "27%", flexDirection: "column" }}>
-                        <Image source={require('../images/gateau3.jpg')} style={containerStyles.cake} />
-                        <TextInput 
-                            keyboardType='numeric' 
-                            onChangeText={handleCake2} 
-                            style={textStyles.cakeNumber}
-                            placeholder={placeholderGateau2}
+                            maxLength={5}
                         />
                     </View>
 
@@ -293,9 +285,21 @@ export default function Client({ handleVisible, handleVisibleInfo, selectedClien
                         <Image source={require('../images/gateau2.jpg')} style={containerStyles.cake} />
                         <TextInput 
                             keyboardType='numeric' 
+                            onChangeText={handleCake2} 
+                            style={textStyles.cakeNumber}
+                            placeholder={placeholderGateau2}
+                            maxLength={5}
+                        />
+                    </View>
+
+                    <View style={{ width: "27%", flexDirection: "column" }}>
+                        <Image source={require('../images/gateau3.jpg')} style={containerStyles.cake} />
+                        <TextInput 
+                            keyboardType='numeric' 
                             onChangeText={handleCake3} 
                             style={textStyles.cakeNumber}
                             placeholder={placeholderGateau3}
+                            maxLength={5}
                         />
                     </View>
                 </View>
