@@ -16,8 +16,8 @@ export default function Stock(){
     const [nbGateau3, setNbGateau3] = useState(0);
     const [visible, setVisible] = useState(false);
     const [state, setState] = useState(false);
-
     const {refresh, setRefresh} = useContext(Data)
+
 
     useEffect(() => {
         const getData = async () => {
@@ -109,6 +109,7 @@ export default function Stock(){
                 <Text style={{...textStyles.title, marginBottom:"5%", fontSize:26}}>On fait le plein ?!</Text>
                 <View style={{...containerStyles.cakeContainer,flexWrap:"wrap", width:"100%"}}>
                     <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
+                        <MaterialIcons name="cake" size={100} style={{marginBottom:"20%"}} color={PALETTE.white} />
                     </View>
                     <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
                         <Image source={require('../images/gateau1.jpg')} style={{...containerStyles.cake, width:120, height:120}} />

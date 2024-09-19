@@ -6,6 +6,8 @@
         }
       },
       "production": {}
+    },
+    "cli": {
+      "version": ">= 12.3.0"
     }
   }
-  

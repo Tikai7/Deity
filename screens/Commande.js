@@ -1,17 +1,21 @@
 
 import React, {useState, useEffect, useContext} from 'react';
-import { View, Text, SafeAreaView, FlatList, TouchableOpacity, Image } from 'react-native';
-import { containerStyles, textStyles } from '../styles/Styles';
-import { getMyData, storeMyData, clearAll } from '../utils/DataManager';
+import { View, Text, SafeAreaView, FlatList, TouchableOpacity, Image, Modal } from 'react-native';
+import { containerStyles, PALETTE, textStyles } from '../styles/Styles';
+import { getMyData } from '../utils/DataManager';
 import { CLIENT_COUNT } from '../utils/Function';
 import { Data } from '../context/Data';
 import Nothing from '../components/Nothing';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Info from '../components/Info';
 
 export default function Commande(){
 
     const [client, setClient] = useState([]);
+    const [visible, setVisible] = useState(false)
+    const [clientItem, setClientItem] = useState({})
     const {refresh, setRefresh} = useContext(Data)
-
+    
 
     useEffect(() => {
         const getData = async()=>{
@@ -37,6 +41,15 @@ export default function Commande(){
     }, [client])
 
 
+    function handleVisible(){
+        setVisible(old=>!old)
+    }
+
+    function handleSeeMore(item){
+        setClientItem({...item})
+        handleVisible()
+    }
+
     function renderClient({item}) {
         return (
             <View style={containerStyles.commandeContainer}>
@@ -56,7 +69,7 @@ export default function Commande(){
                         {item.nbGateau3 || "N/A"}
                     </Text>
                 </View>
-                <TouchableOpacity style={containerStyles.button} onPress={() => alert(`Details for ${item.nom}`)}>
+                <TouchableOpacity style={containerStyles.button} onPress={() => handleSeeMore(item)}>
                     <Text style={textStyles.buttonText}>Voir détails</Text>
                 </TouchableOpacity>
             </View>
@@ -64,12 +77,16 @@ export default function Commande(){
     }
 
     if (client.length<1)
-        return <Nothing/>
+        return <Nothing text={"Vous n'avez aucune commandes !"}/>
 
 
     return(
         <SafeAreaView style={containerStyles.mainContainer}>
-            <Text style={{...textStyles.title, fontSize:28, marginTop:"10%"}}>À qui vendre ?</Text>
+            <MaterialIcons name="sell" size={24} style={{marginTop:"10%"}} color={PALETTE.white} />
+            <Text style={{...textStyles.title, fontSize:26}}>À qui vendre ?</Text>
+            <Modal visible={visible} animationType='slide'>
+                <Info handleVisible={handleVisible} selectedClient={clientItem}/>
+            </Modal>
             <FlatList
                 data={client}
                 keyExtractor={(item) => item.uid}

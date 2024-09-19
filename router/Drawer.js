@@ -14,6 +14,7 @@ const Drawer = createDrawerNavigator();
 export default function DrawerMenu() {
 	const [currentScreen, setCurrentScreen] = useState("Acceuil")
     const [refresh, setRefresh] = useState(false)
+	const [invert, setInvert] = useState(false)
 
 	
 	const options = { header : (props) => <Header {...props} />}
@@ -21,7 +22,8 @@ export default function DrawerMenu() {
 	return (
 		<Data.Provider value={{
 			currentScreen, setCurrentScreen,
-			refresh, setRefresh
+			refresh, setRefresh,
+			invert, setInvert
         }}>
 			<Drawer.Navigator
 				drawerContent={(props) => <CustomDrawer {...props} />}

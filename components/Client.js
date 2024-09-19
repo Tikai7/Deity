@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, Modal, ScrollView } from 'react-native';
 import { buttonStyles, containerStyles, PALETTE, textStyles } from '../styles/Styles';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Check from './Check';
@@ -10,16 +10,23 @@ import { waitingTime } from '../utils/Function';
 import { CAKE } from '../utils/Function';
 import FlashMessage from "react-native-flash-message";
 
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
 
 
-export default function Client({ handleVisible }) {
+export default function Client({ handleVisible, handleVisibleInfo, selectedClient, title="Bienvenue à ..." , action="Ajouter"}) {
+
+    const [placeholderNom, setPlaceholderNom] = useState("Nom")
+    const [placeholderAdresse, setPlaceholderAdresse] = useState("Adresse")
+    const [placeholderGateau1, setPlaceholderGateau1] = useState("0")
+    const [placeholderGateau2, setPlaceholderGateau2] = useState("0")
+    const [placeholderGateau3, setPlaceholderGateau3] = useState("0")
 
     const [nom, setNom] = useState("");
     const [adresse, setAdresse] = useState("");
     const [nbGateau, setNbGateau] = useState(0);
     const [nbGateau2, setNbGateau2] = useState(0);
     const [nbGateau3, setNbGateau3] = useState(0);
+    const [dateAjout, setDateAjout] = useState(new Date());
 
     const[stockGateau, setStockGateau] = useState(0);
     const[stockGateau2, setStockGateau2] = useState(0);
@@ -38,6 +45,7 @@ export default function Client({ handleVisible }) {
             handleVisible();
         } , time);
     }
+
 
     useEffect(() => {
         const getData = async () => {
@@ -63,7 +71,44 @@ export default function Client({ handleVisible }) {
                 setStockGateau3(0)
         }
 
+        const setDataIfExist = () => {
+
+            if (selectedClient?.nom !== undefined){
+                setNom(selectedClient.nom)
+                setPlaceholderNom(selectedClient.nom)
+            }
+
+            if (selectedClient?.adresse !== undefined){
+                setAdresse(selectedClient.adresse)
+                setPlaceholderAdresse(selectedClient.adresse)
+            }
+
+            if (selectedClient?.nbGateau !== undefined){
+                setNbGateau(selectedClient.nbGateau)
+                setPlaceholderGateau1(`${selectedClient.nbGateau}`)
+            }
+
+            if (selectedClient?.nbGateau2 !== undefined){
+                setNbGateau2(selectedClient.nbGateau2)
+                setPlaceholderGateau2(`${selectedClient.nbGateau2}`)
+            }
+
+            if (selectedClient?.nbGateau3 !== undefined){
+                setNbGateau3(selectedClient.nbGateau3)
+                setPlaceholderGateau3(`${selectedClient.nbGateau3}`)
+            }
+
+            if (selectedClient?.dateAjout !== undefined){
+                setDateAjout(selectedClient.dateAjout)
+            }
+
+            console.log("[INFO] Selected client : ", selectedClient)
+
+        }
+
         getData()
+        setDataIfExist()
+
     },[refresh])
     
     function notGoodClient(){
@@ -91,10 +136,28 @@ export default function Client({ handleVisible }) {
 
             if (notGoodClient())
                 return
+           
 
-            await storeMyData(`${CAKE}1`, (stockGateau-nbGateau))
-            await storeMyData(`${CAKE}2`, (stockGateau2-nbGateau2))
-            await storeMyData(`${CAKE}3`, (stockGateau3-nbGateau3))
+
+            totalCake1 = stockGateau - nbGateau
+            totalCake2 = stockGateau2 - nbGateau2
+            totalCake3 = stockGateau3 - nbGateau3
+
+            if (selectedClient?.nbGateau !== undefined){
+                totalCake1 += selectedClient.nbGateau
+            }
+
+            if (selectedClient?.nbGateau2 !== undefined){
+                totalCake2 += selectedClient.nbGateau2
+            }
+
+            if (selectedClient?.nbGateau3 !== undefined){
+                totalCake3 += selectedClient.nbGateau3
+            }   
+
+            await storeMyData(`${CAKE}1`, totalCake1)
+            await storeMyData(`${CAKE}2`, totalCake2)
+            await storeMyData(`${CAKE}3`, totalCake3)
 
             uid = generateUID("CLIENT")
             let clientCount = await getMyData(CLIENT_COUNT)
@@ -106,19 +169,26 @@ export default function Client({ handleVisible }) {
                 clientCount = parseInt(clientCount);
             
             console.log("[INFO] Client count : ", clientCount)
+
+
+            const keyToStore =  selectedClient?.key || `${clientCount+1}`
             const s = await storeMyData(
-                (`${clientCount+1}`), {
+                keyToStore, {
                     nom: nom,
+                    key : keyToStore,
                     adresse: adresse,
                     nbGateau: nbGateau,
                     nbGateau2: nbGateau2,
                     nbGateau3: nbGateau3,
-                    dateAjout : new Date(),
+                    dateAjout : dateAjout,
                     uid: uid
                 }
             )
             console.log("[INFO] Client stored state: ", s)
-            const s2 = await storeMyData(CLIENT_COUNT, `${clientCount+1}`)
+            if (action !== "Modifier"){
+                clientCount = clientCount+1
+            }
+            const s2 = await storeMyData(CLIENT_COUNT, `${clientCount}`)
             console.log("[INFO] Client count stored state: ", s2)
             setState(s && s2);
             handleAnimation(waitingTime);
@@ -181,16 +251,17 @@ export default function Client({ handleVisible }) {
 
     return (
         <TouchableWithoutFeedback onPress={handleScreenTap}>
+            <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"35%", width:"100%"}}>
             <View style={containerStyles.clientContainer}>
                 <Modal visible={visible} animationType='fade' transparent={true} >
                     <Check state={state} title={"Client ajouté !"} />
                 </Modal>
 
                 <AntDesign name="addusergroup" size={30} color={PALETTE.white} />                
-                <Text style={textStyles.title}>Bienvenue à ...</Text>
+                <Text style={textStyles.title}>{title}</Text>
 
-                <TextInput onChangeText={(e)=>setNom(e)} placeholder="Nom" style={containerStyles.inputContainer} />
-                <TextInput onChangeText={(e)=>setAdresse(e)} placeholder="Adresse" style={containerStyles.inputContainer} />
+                <TextInput onChangeText={(e)=>setNom(e)} placeholder={placeholderNom} style={containerStyles.inputContainer} />
+                <TextInput onChangeText={(e)=>setAdresse(e)} placeholder={placeholderAdresse} style={containerStyles.inputContainer} />
 
                 <View style={containerStyles.cakeContainer}>
                     <View style={{ width: "27%", flexDirection: "column" }}>
@@ -199,7 +270,7 @@ export default function Client({ handleVisible }) {
                             keyboardType='numeric' 
                             onChangeText={handleCake1} 
                             style={textStyles.cakeNumber}
-                            placeholder='0'
+                            placeholder={placeholderGateau1}
                         />
                     </View>
 
@@ -209,7 +280,7 @@ export default function Client({ handleVisible }) {
                             keyboardType='numeric' 
                             onChangeText={handleCake2} 
                             style={textStyles.cakeNumber}
-                            placeholder='0'
+                            placeholder={placeholderGateau2}
                         />
                     </View>
 
@@ -219,20 +290,22 @@ export default function Client({ handleVisible }) {
                             keyboardType='numeric' 
                             onChangeText={handleCake3} 
                             style={textStyles.cakeNumber}
-                            placeholder='0'
+                            placeholder={placeholderGateau3}
                         />
                     </View>
                 </View>
 
                 <View style={{flex:0.1}}></View>
                 <TouchableOpacity onPress={()=>handleAddClient()} style={{ ...buttonStyles.primaryButton, height:50, marginTop: "10%" }}>
-                    <Text style={textStyles.secondaryText}>Ajoutez</Text>
+                    <Text style={textStyles.secondaryText}>{action}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleVisible} style={{...buttonStyles.secondaryButton, height:50,}}>
                     <Text style={textStyles.primaryText}>Annuler</Text>
                 </TouchableOpacity>
-                <FlashMessage position="top"/>
             </View>
+            <FlashMessage position="top" style={{marginTop:"-35%"}}/>
+
+            </ScrollView>
         </TouchableWithoutFeedback>
     );
 }

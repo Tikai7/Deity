@@ -25,6 +25,18 @@ export const storeMyData = async (key, value) => {
     }
 };
 
+export const deleteItem = async(itemKey) => {
+    try {
+        await AsyncStorage.removeItem(itemKey)
+        console.log('Item deleted from AsyncStorage:', itemKey);
+        return true;
+    } catch (error) {
+        console.error('Error clearing all items from AsyncStorage:', e);
+        return false;
+    }
+
+}
+
 export const clearAll = async () => {
     try {
         const keys = await AsyncStorage.getAllKeys();
