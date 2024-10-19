@@ -1,0 +1,4 @@
+ajouter montant
+ajouter historique de commande pour chaque client 
+ajouter card client pas que voir plus
+ajouter histoirque pour stock (lors de la confirmation)

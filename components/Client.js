@@ -9,6 +9,7 @@ import { Data } from '../context/Data';
 import { waitingTime } from '../utils/Function';
 import { CAKE } from '../utils/Function';
 import FlashMessage from "react-native-flash-message";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { showMessage } from "react-native-flash-message";
 
@@ -32,6 +33,11 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
     const[stockGateau2, setStockGateau2] = useState(0);
     const[stockGateau3, setStockGateau3] = useState(0);
 
+    const [prixGateau1, setPrixGateau1] = useState(0)
+    const [prixGateau2, setPrixGateau2] = useState(0)
+    const [prixGateau3, setPrixGateau3] = useState(0)
+
+
     const [visible, setVisible] = useState(false);
     const [state, setState] = useState(false);
 
@@ -53,10 +59,30 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
             const g1 = await getMyData(`${CAKE}1`)
             const g2 = await getMyData(`${CAKE}2`)
             const g3 = await getMyData(`${CAKE}3`)
+
+            const prixG1 = await getMyData(`${CAKE}1_price`)
+            const prixG2 = await getMyData(`${CAKE}2_price`)
+            const prixG3 = await getMyData(`${CAKE}3_price`)
             
+    
             console.log("[INFO] Stock Gateau 1 : ", g1)
             console.log("[INFO] Stock Gateau 2 : ", g2)
             console.log("[INFO] Stock Gateau 3 : ", g3)
+
+            if (prixG1 !== null)
+                setPrixGateau1(prixG1)
+            else
+                setPrixGateau1(0)
+            if (prixG2 !== null)
+                setPrixGateau2(prixG2)
+            else
+                setPrixGateau2(0)
+
+            if (prixG3 !== null)
+                setPrixGateau3(prixG3)
+            else
+                setPrixGateau3(0)
+
 
             if (g1 !== null)
                 setStockGateau(g1)
@@ -111,6 +137,25 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
         setDataIfExist()
 
     },[refresh])
+
+
+    async function addToHistory(client) {
+        try {
+            const history = await getMyData(client.groupUID+"_history")
+            if (history === null){
+                await storeMyData(client.groupUID+"_history", [client])
+            }
+            else{
+                const newHistory = [...history, client]
+                await storeMyData(client.groupUID+"_history", newHistory)
+            }
+            return true
+        } catch (error) {
+            console.error("[ERROR] Error storing client data in history: ", error);
+            return false
+        }
+    }
+
     
     function notGoodClient(){
         if ((!nbGateau && !nbGateau2 && !nbGateau3)){
@@ -137,8 +182,7 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
 
             if (notGoodClient())
                 return
-           
-
+        
 
             totalCake1 = stockGateau - nbGateau
             totalCake2 = stockGateau2 - nbGateau2
@@ -161,6 +205,12 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
             await storeMyData(`${CAKE}3`, totalCake3)
 
             uid = generateUID("CLIENT")
+            groupUID = generateUID("GROUP")
+            if (selectedClient?.groupUID !== undefined){
+                groupUID = selectedClient.groupUID
+            }
+
+
             let clientCount = await getMyData(CLIENT_COUNT)
 
 
@@ -171,27 +221,38 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
             
             console.log("[INFO] Client count : ", clientCount)
 
-
             const keyToStore =  selectedClient?.key || `${clientCount+1}`
-            const s = await storeMyData(
-                keyToStore, {
-                    nom: nom,
-                    key : keyToStore,
-                    adresse: adresse,
-                    nbGateau: nbGateau,
-                    nbGateau2: nbGateau2,
-                    nbGateau3: nbGateau3,
-                    dateAjout : dateAjout,
-                    uid: uid
-                }
-            )
+            const client = {
+                nom: nom,
+                key : keyToStore,
+                adresse: adresse,
+                nbGateau: nbGateau,
+                nbGateau2: nbGateau2,
+                nbGateau3: nbGateau3,
+                dateAjout : dateAjout,
+                dateAjoutDB : new Date(),
+                prixTotal: (nbGateau * prixGateau1) + (nbGateau2 * prixGateau2) + (nbGateau3 * prixGateau3),
+                prixGateau1: prixGateau1,
+                prixGateau2: prixGateau2,
+                prixGateau3: prixGateau3,
+                uid: uid,
+                groupUID: groupUID
+            }
+
+            const s = await storeMyData(keyToStore, client)
             console.log("[INFO] Client stored state: ", s)
-            if (action !== "Modifier"){
+            let s3 = true
+            if (action !== "Ajouter commande"){
                 clientCount = clientCount+1
             }
+            else{
+                s3 = await addToHistory(client)
+                console.log("[INFO] Client added to history : ", s3)
+            }
+
             const s2 = await storeMyData(CLIENT_COUNT, `${clientCount}`)
             console.log("[INFO] Client count stored state: ", s2)
-            setState(s && s2);
+            setState(s && s2 && s3);
             handleAnimation(waitingTime);
         } catch (error) {
             console.error("[ERROR] Error storing client data: ", error);
@@ -259,15 +320,23 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
         <TouchableWithoutFeedback onPress={handleScreenTap}>
             <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"35%", width:"100%"}}>
             <View style={containerStyles.clientContainer}>
+                <View style={{flex:1,flexDirection:"row",marginTop:"-10%", marginBottom:"20%", justifyContent:"space-around"}}>
+                    <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
+                        <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
+                    </TouchableOpacity>
+                    <Text style={{...textStyles.title, fontSize:25}}>{title}</Text>
+                    {/* <AntDesign name="addusergroup" size={30} color={PALETTE.white} />                 */}
+
+                </View>
                 <Modal visible={visible} animationType='fade' transparent={true} >
-                    <Check state={state} title={action !== "Modifier" ? "Client ajouté !" : "Client modifié !"} />
+                    <Check state={state} title={action !== "Ajouter commande" ? "Client ajouté !" : "Client modifié !"} />
                 </Modal>
 
-                <AntDesign name="addusergroup" size={30} color={PALETTE.white} />                
-                <Text style={textStyles.title}>{title}</Text>
+                {/* <AntDesign name="addusergroup" size={30} color={PALETTE.white} />                
+                <Text style={textStyles.title}>{title}</Text> */}
 
-                <TextInput defaultValue={action==="Modifier" ? placeholderNom : ""} maxLength={30} onChangeText={(e)=>setNom(e)} placeholder={placeholderNom} style={containerStyles.inputContainer} />
-                <TextInput defaultValue={action==="Modifier" ? placeholderAdresse: ""} maxLength={40} onChangeText={(e)=>setAdresse(e)} placeholder={placeholderAdresse} style={containerStyles.inputContainer} />
+                <TextInput defaultValue={action==="Ajouter commande" ? placeholderNom : ""} maxLength={30} onChangeText={(e)=>setNom(e)} placeholder={placeholderNom} style={containerStyles.inputContainer} />
+                <TextInput defaultValue={action==="Ajouter commande" ? placeholderAdresse: ""} maxLength={40} onChangeText={(e)=>setAdresse(e)} placeholder={placeholderAdresse} style={containerStyles.inputContainer} />
 
                 <View style={containerStyles.cakeContainer}>
                     <View style={{ width: "27%", flexDirection: "column" }}>
@@ -305,12 +374,12 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
                 </View>
 
                 <View style={{flex:0.1}}></View>
-                <TouchableOpacity onPress={()=>handleAddClient()} style={{ ...buttonStyles.primaryButton, height:50, marginTop: "10%" }}>
+                <TouchableOpacity onPress={()=>handleAddClient()} style={{ ...buttonStyles.primaryButton, height:50, marginTop: "20%" }}>
                     <Text style={textStyles.secondaryText}>{action}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleVisible} style={{...buttonStyles.secondaryButton, height:50,}}>
+                {/* <TouchableOpacity onPress={handleVisible} style={{...buttonStyles.secondaryButton, height:50,}}>
                     <Text style={textStyles.primaryText}>Annuler</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
             <FlashMessage position="top" style={{marginTop:"-35%"}}/>
 

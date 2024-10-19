@@ -8,6 +8,7 @@ import { CAKE } from '../utils/Function';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Data } from '../context/Data';
 import { waitingTime } from '../utils/Function';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function Stock(){
 
@@ -54,6 +55,23 @@ export default function Stock(){
         } , time);
     }
 
+    async function addToHistory(cakeInfo) {
+        try {
+            const history = await getMyData("stock_history")
+            if (history === null){
+                await storeMyData("stock_history", [cakeInfo])
+            }
+            else{
+                const newHistory = [...history, cakeInfo]
+                await storeMyData("stock_history", newHistory)
+            }
+            return true
+        } catch (error) {
+            console.error("[ERROR] Error storing cake stock data in history: ", error);
+            return false
+        }
+    }
+
 
     async function handleConfirm() {
         try {
@@ -61,7 +79,16 @@ export default function Stock(){
             const s2 = await storeMyData(`${CAKE}2`, nbGateau2)
             const s3 = await storeMyData(`${CAKE}3`, nbGateau3)
 
-            setState(s && s2 && s3);
+            const stockCakes = {
+                "gateau1": nbGateau,
+                "gateau2": nbGateau2,
+                "gateau3": nbGateau3,
+                "date": new Date()
+            }
+
+            const s4 = await addToHistory(stockCakes)
+
+            setState(s && s2 && s3 && s4);
             handleAnimation(waitingTime);
         } catch (error) {
             console.error("[ERROR] Error storing client stock: ", error);
@@ -108,7 +135,9 @@ export default function Stock(){
                 <Text style={{...textStyles.title, marginBottom:"5%", fontSize:26}}>On fait le plein ?!</Text>
                 <View style={{...containerStyles.cakeContainer,flexWrap:"wrap", width:"100%"}}>
                     <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
-                        <MaterialIcons name="cake" size={100} style={{marginBottom:"20%"}} color={PALETTE.white} />
+                        <MaterialCommunityIcons name="chef-hat" size={100} style={{marginBottom:"20%"}} color={PALETTE.white} />
+                                    {/* <MaterialCommunityIcons name="chef-hat" size={24} color="white" /> */}
+
                     </View>
                     <View style={{ width: "50%", alignItems:"center", flexDirection: "column" }}>
                         <Image source={require('../images/gateau1.jpg')} style={{...containerStyles.cake, width:120, height:120}} />

@@ -32,6 +32,7 @@ export default function Commande(){
                 if (c !== null)
                     commandes.push(c)
             } 
+            commandes.sort((a,b) => new Date(b.dateAjout) - new Date(a.dateAjout))
             setClient(commandes)
         }
         getData()
@@ -53,8 +54,14 @@ export default function Commande(){
 
     function renderClient({item}) {
         return (
+            <TouchableOpacity style={{width:"100%"}} onPress={() => handleSeeMore(item)}>
+
             <View style={containerStyles.commandeContainer}>
-                <Text style={textStyles.clientName}>{item.nom}</Text>
+                <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+                    <Text style={textStyles.clientName}>{item.nom}</Text>
+                    <Text style={textStyles.clientName}>{item.prixTotal} DZD</Text>
+
+                </View>
                 <Text style={textStyles.clientAddress}>{item.adresse}</Text>
                 <View style={containerStyles.orderDetails}>
                     <Text>
@@ -70,10 +77,12 @@ export default function Commande(){
                         {item.nbGateau3 || "N/A"}
                     </Text>
                 </View>
-                <TouchableOpacity style={containerStyles.button} onPress={() => handleSeeMore(item)}>
+                <View style={containerStyles.button}>
                     <Text style={textStyles.buttonText}>Voir détails</Text>
-                </TouchableOpacity>
+                </View>
             </View>
+            </TouchableOpacity>
+
         );
     }
 

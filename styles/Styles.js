@@ -17,6 +17,22 @@ export const fontStyle = {
 }
 
 export const containerStyles = {
+	parameterContainer : {
+		width : "100%",
+		height : 50,
+		backgroundColor : PALETTE.primary,
+		justifyContent : "flex-start",
+		alignItems : "center",
+		marginBottom : "5%",
+	},
+	parametersContainer : {
+		flex : 1,
+		width : "100%",
+		justifyContent : "center",
+		alignItems : "center",
+		backgroundColor : PALETTE.primary,
+		padding : "5%",
+	},
 	commandeContainer : {
 		width:"100%",
 		height: 100,
@@ -138,6 +154,12 @@ export const containerStyles = {
 }
 
 export const textStyles = {
+	parameterText: {
+		fontSize: fontStyle.medium,
+		color: PALETTE.white,
+		fontWeight: "bold",
+		textAlign: "flex-start",
+	},
 	clientName: {
         fontSize: fontStyle.lessBig,
         fontWeight: "bold",

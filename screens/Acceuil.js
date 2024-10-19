@@ -1,10 +1,11 @@
 
 import React, {useRef, useEffect, useState} from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View, Modal, Image} from 'react-native';
 import { buttonStyles, containerStyles, PALETTE, textStyles } from '../styles/Styles';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import LottieView from 'lottie-react-native';
 import Client from '../components/Client';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 
 export default function Acceuil(){
@@ -29,18 +30,15 @@ export default function Acceuil(){
 				<Client handleVisible={handleVisible} handleVisibleParent={()=>{}}/>
 			</Modal>
 
-            <View style={containerStyles.lottieContainer}>
-                <LottieView 
-                    ref={lottieRef}
-                    source={require('../lottie/new_client.json')} 
-                    autoPlay 
-                    loop 
-                    speed={1.2}
-                    style={{width:300,height:300,marginBottom:"5%"}}
-                    renderMode={"SOFTWARE"}
-                />
+            <View style={{...containerStyles.lottieContainer, marginTop:"-5%", marginBottom:"20%"}}>
+                <MaterialCommunityIcons name="chef-hat" size={24} color="white" />
+                <Text style={{...textStyles.title, fontSize:26}}>Bienvenue Patron</Text>
+                <Image
+                    source={require('../images/logoDeity.jpg')}
+                    style={{width:200, height:200, borderRadius:40}}
+                />              
             </View>
-			<TouchableOpacity onPress={handleVisible} style={{...buttonStyles.primaryButton, flexDirection:"row", justifyContent:"space-around"}}>
+			<TouchableOpacity onPress={handleVisible} style={{...buttonStyles.primaryButton, flexDirection:"row", marginBottom:"15%", justifyContent:"space-around"}}>
 				<View style={{marginLeft:"10%"}}>
 					<AntDesign name="plus" size={24} color={PALETTE.primary} />
 				</View>
