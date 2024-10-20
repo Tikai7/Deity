@@ -124,7 +124,7 @@ export async function loadAllData(setRefresh){
                 await storeMyData(`${i+1}`, data.clients[i])
             }
             for (let i = 0; i < data.clients.length; i++) {
-                for (let j = 0; j < data.clientHistory.length; j++) {
+                for (let j = 0; j < data.clientHistory?.length; j++) {
                     if (
                         data.clientHistory[j] !== null && data.clientHistory[j] !== undefined
                         && data.clientHistory[j][0].groupUID === data.clients[i].groupUID
