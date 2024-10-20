@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useContext } from 'react';
 import { View, Image, Text, TextInput, Keyboard, TouchableOpacity,TouchableWithoutFeedback, ScrollView, Modal } from 'react-native';
 import { containerStyles, textStyles, PALETTE, buttonStyles } from '../styles/Styles';
 import { getMyData,storeMyData } from '../utils/DataManager';
@@ -8,8 +8,12 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { waitingTime } from '../utils/Function';
 import Check from './Check';
 import { showMessage } from "react-native-flash-message";
+import { Data } from '../context/Data';
 
 export default function Prices({handleVisible}){
+
+    const {refresh, setRefresh} = useContext(Data)
+
     const [placeholderGateau1, setPlaceholderGateau1] = useState("0 DZD")
     const [placeholderGateau2, setPlaceholderGateau2] = useState("0 DZD")
     const [placeholderGateau3, setPlaceholderGateau3] = useState("0 DZD")
@@ -61,7 +65,7 @@ export default function Prices({handleVisible}){
         }
 
         getData()
-    }, [])
+    }, [refresh])
 
     function handleCakePrice(text, id) {
         if (/^\d*$/.test(text)) {

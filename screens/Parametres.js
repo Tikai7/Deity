@@ -7,11 +7,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Prices from '../components/Prices';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import History from '../components/History';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Database from '../components/Database';
 
 export default function Parametres() {
     const lottieRef = useRef(null);
     const [visiblePrices, setVisiblePrices] = useState(false);  
-    const [visibleHelp, setVisibleHelp] = useState(false);
+    const [visibleData, setVisibleData] = useState(false);
     const [visibleHistory, setVisibleHistory] = useState(false);
 
 
@@ -26,18 +28,18 @@ export default function Parametres() {
     function handleVisible(type) {
         if (type === "prices"){
             setVisiblePrices((old) => !old);
-            setVisibleHelp(false);
+            setVisibleData(false);
             setVisibleHistory(false);
         }
-        else if (type === "help"){
-            setVisibleHelp((old) => !old);
+        else if (type === "data"){
+            setVisibleData((old) => !old);
             setVisiblePrices(false);
             setVisibleHistory(false);
         }
         else if (type === "history"){
             setVisibleHistory((old) => !old);
             setVisiblePrices(false);
-            setVisibleHelp(false);
+            setVisibleData(false);
         }
     }
 
@@ -52,6 +54,10 @@ export default function Parametres() {
 
                 <Modal visible={visibleHistory} animationType='slide' >
                     <History handleVisible={() => handleVisible("history")} />
+                </Modal>
+
+                <Modal visible={visibleData} animationType='slide' >
+                    <Database handleVisible={() => handleVisible("data")} />
                 </Modal>
 
                 <View style={containerStyles.parametersContainer}>
@@ -81,7 +87,19 @@ export default function Parametres() {
                         </View>
                     </TouchableOpacity>
 
-            
+                    <TouchableOpacity style={{width:"100%"}} onPress={() => handleVisible("data")}>
+                        <View style={{
+                            ...containerStyles.commandeContainer, 
+                            backgroundColor:PALETTE.primary,
+                            flexDirection: 'row', 
+                            alignItems: 'center',
+                        }}>
+                            {/* <MaterialCommunityIcons name="database-sync-outline" size={24} color="black" /> */}
+                            <MaterialCommunityIcons name="database-outline" size={24} color={PALETTE.white} style={{ marginRight: 10 }} />
+                            <Text style={textStyles.primaryText}>Données</Text>
+                        </View>
+                    </TouchableOpacity>
+
                 </View>
             </ScrollView>
 

@@ -1,14 +1,16 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { textStyles, containerStyles, PALETTE } from "../styles/Styles";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import LottieView from "lottie-react-native";
 import { convertDate } from "../utils/Function";
 import { getMyData } from "../utils/DataManager";
+import { Data } from "../context/Data";
 
 export default function HistoryCakes({handleVisible, history_type, info_type}){
     const [history, setHistory] = useState([]);
     const lottieRef = useRef(null);
+    const {refresh, setRefresh} = useContext(Data)
 
     useEffect(() => {
         const getHistory = async () => {
@@ -21,7 +23,7 @@ export default function HistoryCakes({handleVisible, history_type, info_type}){
             setHistory([...historyData]);
         };
         getHistory();
-    }, []);
+    }, [refresh]);
 
     function renderCommande({ item, index }) {
         return (
