@@ -41,7 +41,7 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
     const [visible, setVisible] = useState(false);
     const [state, setState] = useState(false);
 
-    const {refresh, setRefresh} = useContext(Data)
+    const {refresh, setRefresh, isIOS} = useContext(Data)
 
 
     async function handleAnimation(time) {
@@ -318,9 +318,9 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
 
     return (
         <TouchableWithoutFeedback onPress={handleScreenTap}>
-            <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"35%", width:"100%"}}>
+            <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop: isIOS ? "35%" : "15%", width:"100%"}}>
             <View style={containerStyles.clientContainer}>
-                <View style={{flex:1,flexDirection:"row",marginTop:"-10%", marginBottom:"20%", justifyContent:"space-around"}}>
+                <View style={{flex:1,flexDirection:"row",marginTop: isIOS ? "-10%" : "0%", marginBottom:"20%", justifyContent:"space-around"}}>
                     <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
@@ -381,7 +381,7 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
                     <Text style={textStyles.primaryText}>Annuler</Text>
                 </TouchableOpacity> */}
             </View>
-            <FlashMessage position="top" style={{marginTop:"-35%"}}/>
+            <FlashMessage position="top" style={{marginTop: isIOS ? "-35%" : "0%"}}/>
 
             </ScrollView>
         </TouchableWithoutFeedback>

@@ -8,6 +8,7 @@ import CustomDrawer from '../components/CustomDrawer';
 import React from 'react'
 import { useState } from 'react';
 import { Data } from '../context/Data';
+import { Platform } from 'react-native';
 
 const Drawer = createDrawerNavigator();
 
@@ -15,6 +16,7 @@ export default function DrawerMenu() {
 	const [currentScreen, setCurrentScreen] = useState("Acceuil")
     const [refresh, setRefresh] = useState(false)
 	const [invert, setInvert] = useState(false)
+	const isIOS = Platform.OS === "ios"
 
 	
 	const options = { header : (props) => <Header {...props} />}
@@ -23,7 +25,8 @@ export default function DrawerMenu() {
 		<Data.Provider value={{
 			currentScreen, setCurrentScreen,
 			refresh, setRefresh,
-			invert, setInvert
+			invert, setInvert,
+			isIOS
         }}>
 			<Drawer.Navigator
 				drawerContent={(props) => <CustomDrawer {...props} />}

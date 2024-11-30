@@ -10,7 +10,7 @@ import { Data } from "../context/Data";
 export default function HistoryCakes({handleVisible, history_type, info_type}){
     const [history, setHistory] = useState([]);
     const lottieRef = useRef(null);
-    const {refresh, setRefresh} = useContext(Data)
+    const {refresh, isIOS} = useContext(Data)
 
     useEffect(() => {
         const getHistory = async () => {
@@ -38,7 +38,7 @@ export default function HistoryCakes({handleVisible, history_type, info_type}){
     }
 
     return (
-        <View style={{ backgroundColor: PALETTE.primary, paddingTop: "25%", paddingHorizontal: 35, flex: 1, paddingBottom:"10%"}}>
+        <View style={{ backgroundColor: PALETTE.primary, paddingTop: isIOS ? "25%" : "15%", paddingHorizontal: 35, flex: 1, paddingBottom:"10%"}}>
             <View style={{ flexDirection: "row", marginBottom: "5%", justifyContent: "space-around" }}>
                 <TouchableOpacity onPress={handleVisible}>
                     <MaterialIcons name="arrow-back" size={30} color={PALETTE.white}/>

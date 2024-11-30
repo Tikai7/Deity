@@ -16,7 +16,7 @@ export default function Info({handleVisible, selectedClient}){
 
     const [visible, setVisible] = useState(false)
     const [visibleValidation, setVisibleValidation] = useState(false)
-    const {setRefresh} = useContext(Data)
+    const {setRefresh, isIOS} = useContext(Data)
     const [visibleHistory, setVisibleHistory] = useState(false)
 
     const clientCoordinates = {
@@ -57,7 +57,7 @@ export default function Info({handleVisible, selectedClient}){
 
 
     return(
-        <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"30%", width:"100%"}}>
+        <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:isIOS ? "35%" : "15%", width:"100%"}}>
         <Modal visible={visibleHistory} animationType="slide">
             <HistoryClient 
                 handleVisible={handleHistory} 
@@ -83,7 +83,7 @@ export default function Info({handleVisible, selectedClient}){
         </Modal>
 
         <View style={containerStyles.clientContainer}>
-            <View style={{flex:1, flexDirection:"row", marginTop:"-10%", justifyContent:"center", paddingHorizontal:"5%"}}>
+            <View style={{flex:1, flexDirection:"row", marginTop:isIOS ? "-10%" : "0%", justifyContent:"center", paddingHorizontal:"5%"}}>
                 <TouchableOpacity style={{marginLeft:"0%", zIndex:99}} onPress={handleVisible}>
                     <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                 </TouchableOpacity>

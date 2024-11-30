@@ -10,7 +10,7 @@ import { Data } from "../context/Data";
 export default function HistoryClient({ handleVisible, clientGroupID }) {
     const [history, setHistory] = useState([]);
     const lottieRef = useRef(null);
-    const {refresh, setRefresh} = useContext(Data)
+    const {refresh, isIOS} = useContext(Data)
 
     useEffect(() => {
         const getHistory = async () => {
@@ -40,7 +40,7 @@ export default function HistoryClient({ handleVisible, clientGroupID }) {
     }
 
     return (
-        <View style={{ backgroundColor: PALETTE.primary, paddingTop: "20%", paddingHorizontal: 15, flex: 1, paddingBottom:"10%"}}>
+        <View style={{ backgroundColor: PALETTE.primary, paddingTop:isIOS ? "20%" : "15%", paddingHorizontal: 15, flex: 1, paddingBottom:"10%"}}>
             <View style={{ flexDirection: "row", marginBottom: "5%", justifyContent: "space-around" }}>
                 <TouchableOpacity onPress={handleVisible}>
                     <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />

@@ -1,18 +1,17 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { ScrollView, View, Text, TouchableOpacity, Modal } from "react-native"
 import { PALETTE } from "../styles/Styles"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { textStyles, containerStyles } from "../styles/Styles";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import HistoryCakes from "./HistoryCakes";
-
-
+import { Data } from "../context/Data";
 export default function History({handleVisible}){
 
     const [visibleCake, setVisibleCake] = useState(false);
     const [historyType, setHistoryType] = useState("");
     const [infoType, setInfoType] = useState("");
-
+    const {isIOS} = useContext(Data)
 
     function handleErrorMessage(){
         showMessage({
@@ -34,9 +33,9 @@ export default function History({handleVisible}){
     }
 
     return(
-        <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:"35%", width:"100%"}}>
+        <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:isIOS ? "35%" : "15%", width:"100%"}}>
             <View style={containerStyles.mainContainer}>
-                <View style={{flex:1,flexDirection:"row",marginTop:"-10%", marginBottom:"5%", justifyContent:"space-around"}}>
+                <View style={{flex:1,flexDirection:"row",marginTop: isIOS ? "-10%" : "0%", marginBottom:"5%", justifyContent:"space-around"}}>
                     <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
@@ -86,7 +85,7 @@ export default function History({handleVisible}){
                         </View>
                     </TouchableOpacity>
                 </View>
-                <FlashMessage position="top" style={{marginTop:"-35%"}} />
+                <FlashMessage position="top" style={{marginTop: isIOS ? "-35%" : "0%"}} />
         </ScrollView>
     );
 }

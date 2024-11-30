@@ -11,7 +11,7 @@ import { Data } from '../context/Data';
 export default function Database({ handleVisible }) {
     const [visible, setVisible] = useState(false);
     const [state, setState] = useState(false);
-    const { refresh, setRefresh } = useContext(Data);
+    const { isIOS, setRefresh } = useContext(Data);
 
     async function handleAnimation(time) {
         setVisible(true);
@@ -44,13 +44,13 @@ export default function Database({ handleVisible }) {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: PALETTE.primary, paddingTop: "35%", width: "100%" }}>
+        <ScrollView style={{ backgroundColor: PALETTE.primary, paddingTop: isIOS ? "35%" : "15%", width: "100%" }}>
             <View style={containerStyles.clientContainer}>
                 <Modal visible={visible} animationType='fade' transparent={true}>
                     <Check state={state} title={"Synchronisation terminé"} />
                 </Modal>
 
-                <View style={{ flex: 1, flexDirection: "row", marginTop: "-10%", marginBottom: "5%", justifyContent: "space-around" }}>
+                <View style={{ flex: 1, flexDirection: "row", marginTop: isIOS ? "-10%" : "0%", marginBottom: "5%", justifyContent: "space-around" }}>
                     <TouchableOpacity style={{ marginLeft: "10%", zIndex: 99 }} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>

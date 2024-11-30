@@ -14,7 +14,8 @@ export default function Commande(){
     const [client, setClient] = useState([]);
     const [visible, setVisible] = useState(false)
     const [clientItem, setClientItem] = useState({})
-    const {refresh, setRefresh} = useContext(Data)
+    const {refresh, isIOS} = useContext(Data)
+
     
 
     useEffect(() => {
@@ -87,7 +88,7 @@ export default function Commande(){
     }
 
     if (client.length<1)
-        return <Nothing text={"Vous n'avez aucune commandes !"}/>
+        return <Nothing text={"Vous n'avez aucune \ncommandes !"}/>
 
 
     return(
