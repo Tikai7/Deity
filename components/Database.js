@@ -13,12 +13,24 @@ export default function Database({ handleVisible }) {
     const [state, setState] = useState(false);
     const { isIOS, setRefresh } = useContext(Data);
 
+    // async function handleAnimation(time) {
+    //     setVisible(true);
+    //     setTimeout(() => {
+    //         setVisible(false);
+    //         handleVisible();
+    //     }, time);
+    // }
+
     async function handleAnimation(time) {
         setVisible(true);
+        
         setTimeout(() => {
             setVisible(false);
-            handleVisible();
         }, time);
+    
+        setTimeout(() => {
+            handleVisible();
+        }, time + 100); 
     }
 
     async function handleSync() {

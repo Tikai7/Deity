@@ -65,17 +65,17 @@ export default function Commande(){
                 </View>
                 <Text style={textStyles.clientAddress}>{item.adresse}</Text>
                 <View style={containerStyles.orderDetails}>
-                    <Text>
+                    <Text style={{color:PALETTE.primary}}>
                         <Image source={require('../images/gateau1.jpg')} style={{...containerStyles.cake, marginRight:4,borderRadius:4, width:50, height:50}} /> 
-                        {item.nbGateau || "N/A"}
+                        {` ${item.nbGateau}` || "N/A"}
                     </Text>
-                    <Text>
+                    <Text style={{color:PALETTE.primary}}>
                         <Image source={require('../images/gateau2.jpg')} style={{...containerStyles.cake, marginRight:4,borderRadius:4, width:50, height:50}} /> 
-                        {item.nbGateau2 || "N/A"}
+                        {` ${item.nbGateau2}` || "N/A"}
                     </Text>
-                    <Text>
+                    <Text style={{color:PALETTE.primary}}>
                         <Image source={require('../images/gateau3.jpg')} style={{...containerStyles.cake, marginRight:4,borderRadius:4, width:50, height:50}} /> 
-                        {item.nbGateau3 || "N/A"}
+                        {` ${item.nbGateau3}` || "N/A"}
                     </Text>
                 </View>
                 <View style={containerStyles.button}>

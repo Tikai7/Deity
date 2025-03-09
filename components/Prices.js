@@ -25,14 +25,25 @@ export default function Prices({handleVisible}){
     const [visible, setVisible] = useState(false);  
     const [state, setState] = useState(false);
 
+    // async function handleAnimation(time) {
+    //     setVisible(true);
+    //     setTimeout(() => {
+    //         setVisible(false);
+    //         handleVisible();
+    //     } , time);
+    // }
+
     async function handleAnimation(time) {
         setVisible(true);
+        
         setTimeout(() => {
             setVisible(false);
+        }, time);
+    
+        setTimeout(() => {
             handleVisible();
-        } , time);
+        }, time + 100); 
     }
-
     useEffect(() => {
         const getData = async () => {
             const prixG1 = await getMyData(`${CAKE}1_price`)

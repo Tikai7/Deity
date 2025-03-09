@@ -14,7 +14,11 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { showMessage } from "react-native-flash-message";
 
 
-export default function Client({ handleVisible, handleVisibleParent, selectedClient, title="Bienvenue à ..." , action="Ajouter"}) {
+export default function Client({ 
+    handleVisible, handleVisibleParent, selectedClient, title="Bienvenue à ..." , action="Ajouter",
+    isHome=false
+
+}) {
 
     const [placeholderNom, setPlaceholderNom] = useState("Nom")
     const [placeholderAdresse, setPlaceholderAdresse] = useState("Adresse")
@@ -44,14 +48,35 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
     const {refresh, setRefresh, isIOS} = useContext(Data)
 
 
+    // async function handleAnimation(time) {
+    //     setVisible(true);
+    //     setTimeout(() => {
+    //         setVisible(false);
+    //         if (!isHome){
+    //             handleVisible();
+    //             // handleVisibleParent()
+    //         }
+    //     } , time);
+    // }
+
     async function handleAnimation(time) {
         setVisible(true);
+        
         setTimeout(() => {
             setVisible(false);
+        }, time);
+    
+        setTimeout(() => {
             handleVisible();
-            handleVisibleParent()
-        } , time);
+        }, time + 100); 
+
+        setTimeout(() => {
+            handleVisibleParent();
+        }, (time + time/2)); 
+        
     }
+
+    
 
 
     useEffect(() => {
@@ -324,7 +349,7 @@ export default function Client({ handleVisible, handleVisibleParent, selectedCli
                     <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
-                    <Text style={{...textStyles.title, fontSize:25}}>{title}</Text>
+                    <Text style={{...textStyles.title, fontSize:25, marginLeft:"-8%"}}>{title}</Text>
                     {/* <AntDesign name="addusergroup" size={30} color={PALETTE.white} />                 */}
 
                 </View>

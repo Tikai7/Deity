@@ -27,7 +27,7 @@ export default function Acceuil(){
     return(
         <SafeAreaView style={containerStyles.mainContainer}>
 			<Modal visible={visible} animationType='slide' >
-				<Client handleVisible={handleVisible} handleVisibleParent={()=>{}}/>
+				<Client handleVisible={handleVisible} handleVisibleParent={()=>{}} isHome={true}/>
 			</Modal>
 
             <View style={{...containerStyles.lottieContainer, marginTop:"-5%", marginBottom:"20%"}}>
