@@ -1,6 +1,6 @@
 {
   "name": "stockmanager",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -22,7 +22,8 @@
     "react-native-maps": "^1.18.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "^17.0.0"
   },
   "private": true
 }
