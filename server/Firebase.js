@@ -12,7 +12,7 @@ import { getDoc } from "firebase/firestore/lite";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-  apiKey: process.env.deitysecret,
+  apiKey: process.env.DEITY_API_KEY,
   authDomain: "deity-4bd00.firebaseapp.com",
   projectId: "deity-4bd00",
   storageBucket: "deity-4bd00.appspot.com",
