@@ -1,10 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, addDoc, collection, getDocs } from "firebase/firestore";
-import { CLIENT_COUNT, convertDate } from "../utils/Function";
+import { getFirestore, addDoc, collection, getDocs, query, orderBy, limit, serverTimestamp } from "firebase/firestore";
+import { CLIENT_COUNT } from "../utils/Function";
 import { getMyData, storeMyData } from "../utils/DataManager";
 import { CAKE } from "../utils/Function";
-import { getDoc } from "firebase/firestore/lite";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,10 +24,16 @@ const app = initializeApp(firebaseConfig);
 // connect to firebase
 export const db = getFirestore(app);
 
-export async function exportAllData(setRefresh){
-    try {
-        DATA_EXPORTED = true
+// get the last doc from the collection LocalData
+const q = query(
+    collection(db, "LocalData"),
+    orderBy("updatedAt", "desc"),
+    limit(1)
+);
 
+export async function exportAllData(setRefresh){
+    const DATA_EXPORTED = true
+    try {
         let version = await getMyData("version")
         if (version === null) {
             version = 1
@@ -60,9 +65,9 @@ export async function exportAllData(setRefresh){
         } 
         let clientHistory = []
         for (let i = 0; i < clients.length; i++) {
-            const c = await getMyData(clients[i].groupID + "_history")
+            const c = await getMyData(clients[i].groupUID + "_history")
             if (c !== null)
-                clientHistory.push(c)
+                clientHistory.push(...c)
         }
 
         const data = {
@@ -79,7 +84,8 @@ export async function exportAllData(setRefresh){
             "clientHistory": clientHistory,
             "temp" : false,
             "date": new Date(),
-            "version": version
+            "version": version,
+            "updatedAt": serverTimestamp() 
         }
 
         // push data to firebase firestore not using storeMyData CAUSE IT'S NOT WORKING
@@ -96,52 +102,72 @@ export async function exportAllData(setRefresh){
     }
 }
 
-export async function loadAllData(setRefresh){
+
+export async function loadAllData(setRefresh) {
+    const DATA_LOADED = true;
     try {
-        DATA_LOADED = true
         const doc = await getDocs(collection(db, "LocalData"));
         if (doc.size > 0) {
             // get the last doc
-            console.log("[INFO] Loading data...")
-            const lastDoc = doc.docs[doc.size - 1]
-            console.log("[INFO] Last doc: ", lastDoc.id)
-            const data = lastDoc.data()
-            await storeMyData("version", data.version)
-            await storeMyData(CLIENT_COUNT, data.nbClient)
+            const querySnapshot = await getDocs(q);
+            console.log("[INFO] Loading data...");
+            if (!querySnapshot.empty) {
+                const lastDoc = querySnapshot.docs[0];
+                console.log("[INFO] Last doc id : ", lastDoc.id);
+                const data = lastDoc.data();
+                console.log("[INFO] Last doc version : ", data.version);
 
-            await storeMyData(`${CAKE}1`, data.nbGateau1)
-            await storeMyData(`${CAKE}2`, data.nbGateau2)
-            await storeMyData(`${CAKE}3`, data.nbGateau3)
-            await storeMyData(`${CAKE}1_price`, data.prixGateau1)
-            await storeMyData(`${CAKE}2_price`, data.prixGateau2)
-            await storeMyData(`${CAKE}3_price`, data.prixGateau3)
-
-
-            await storeMyData("prices_history", data.pricesHistory)
-            await storeMyData("stock_history", data.stockHistory)
-
-            for (let i = 0; i < data.clients.length; i++) {
-                await storeMyData(`${i+1}`, data.clients[i])
-            }
-            for (let i = 0; i < data.clients.length; i++) {
-                for (let j = 0; j < data.clientHistory?.length; j++) {
-                    if (
-                        data.clientHistory[j] !== null && data.clientHistory[j] !== undefined
-                        && data.clientHistory[j][0].groupUID === data.clients[i].groupUID
-                    ){
-                        await storeMyData(data.clients[i].groupUID + "_history", data.clientHistory[j])
-                        break
-                    }
+                // Store basic data
+                await storeMyData("version", data.version);
+                await storeMyData(CLIENT_COUNT, data.nbClient);
+                await storeMyData(`${CAKE}1`, data.nbGateau1);
+                await storeMyData(`${CAKE}2`, data.nbGateau2);
+                await storeMyData(`${CAKE}3`, data.nbGateau3);
+                await storeMyData(`${CAKE}1_price`, data.prixGateau1);
+                await storeMyData(`${CAKE}2_price`, data.prixGateau2);
+                await storeMyData(`${CAKE}3_price`, data.prixGateau3);
+                await storeMyData("prices_history", data.pricesHistory);
+                await storeMyData("stock_history", data.stockHistory);
+        
+                // Store clients
+                for (let i = 0; i < data.clients.length; i++) {
+                    await storeMyData(`${i + 1}`, data.clients[i]);
                 }
+        
+                // Group the flat clientHistory array by groupUID
+                const groupedHistory = {};
+                if (data.clientHistory && Array.isArray(data.clientHistory)) {
+                    data.clientHistory.forEach(entry => {
+                        const group = entry.groupUID;
+                        if (!groupedHistory[group]) {
+                            groupedHistory[group] = [];
+                        }
+                        groupedHistory[group].push(entry);
+                    });
+                }
+        
+                // Store each client's history using the grouped data
+                data.clients.forEach(async client => {
+                    const history = groupedHistory[client.groupUID];
+                    if (history) {
+                        await storeMyData(client.groupUID + "_history", history);
+                    }
+                });
+        
+                setRefresh(old => !old);
+                console.log("[INFO] Data loaded successfully");
+                return DATA_LOADED;
+            }
+            else {
+                console.log("[INFO] No data found in Firestore");
+                return !DATA_LOADED;
             }
 
-            setRefresh(old=>!old)
-            console.log("[INFO] Data loaded successfully")
-            return DATA_LOADED
         }
-        return !DATA_LOADED
+        return !DATA_LOADED;
+
     } catch (error) {
         console.error("[ERROR] Error loading data: ", error);
-        return !DATA_LOADED
+        return !DATA_LOADED;
     }
 }

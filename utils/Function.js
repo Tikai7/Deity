@@ -2,6 +2,7 @@
 export const CLIENT_COUNT = "CLIENT_COUNT"
 export const CAKE = "CAKE"
 export const waitingTime = 2000
+export const waitingTimeValidate = 100
 
 export function generateUID(tag) {
     const now = new Date().getTime()

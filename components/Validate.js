@@ -1,25 +1,28 @@
 
 import React, {useContext} from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import LottieView from "lottie-react-native";
 import { containerStyles, PALETTE, textStyles } from "../styles/Styles";
-import { deleteItem, getMyData, storeMyData } from '../utils/DataManager';
-import { CLIENT_COUNT } from "../utils/Function";
+import { deleteItem } from '../utils/DataManager';
 import { Data } from "../context/Data";
+import { waitingTimeValidate } from "../utils/Function";
 
 
 
-export default function Validate({handleVisible,handleVisibleParent, selectedClient }){
+export default function Validate({handleVisible, handleVisibleParent, selectedClient}){
 
     const {setRefresh} = useContext(Data)
 
-    async function deleteClient() {
+    async function deleteClient(time) {
         await deleteItem(`${selectedClient.key}`)
         // const clientCount = await getMyData(CLIENT_COUNT)
         // await storeMyData(CLIENT_COUNT, clientCount-1)
         setRefresh(old=>!old)
-        handleVisible()
-        handleVisibleParent()
+        setTimeout(() => {
+            handleVisible();
+        }, (time)); 
+        setTimeout(() => {
+            handleVisibleParent();
+        }, (time + 100)); 
     }
     
 
@@ -38,7 +41,7 @@ export default function Validate({handleVisible,handleVisibleParent, selectedCli
                     <TouchableOpacity onPress={handleVisible} style={{backgroundColor:PALETTE.primary, padding:10, borderRadius:5}}>
                         <Text style={textStyles.primaryText}>Annuler</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={deleteClient} style={{backgroundColor:PALETTE.error, padding:10, borderRadius:5}}>
+                    <TouchableOpacity onPress={()=>{deleteClient(waitingTimeValidate)}} style={{backgroundColor:PALETTE.error, padding:10, borderRadius:5}}>
                         <Text style={textStyles.primaryText}>Supprimer</Text>
                     </TouchableOpacity>
                 </View>

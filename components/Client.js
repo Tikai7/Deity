@@ -269,6 +269,8 @@ export default function Client({
             let s3 = true
             if (action !== "Ajouter commande"){
                 clientCount = clientCount+1
+                s3 = await addToHistory(client)
+                console.log("[INFO] Client added to history : ", s3)
             }
             else{
                 s3 = await addToHistory(client)
