@@ -11,7 +11,7 @@ import { CAKE } from "../utils/Function";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-  apiKey: process.env.DEITY_API_KEY,
+  apiKey: process.env.EXPO_PUBLIC_DEITY_API_KEY,
   authDomain: "deity-4bd00.firebaseapp.com",
   projectId: "deity-4bd00",
   storageBucket: "deity-4bd00.appspot.com",

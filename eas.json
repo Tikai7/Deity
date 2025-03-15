@@ -1,8 +1,12 @@
 {
     "build": {
       "preview": {
+        "distribution": "internal",
         "android": {
           "buildType": "apk"
+        },
+        "env": {
+          "EXPO_PUBLIC_DEITY_API_KEY": "EXPO_PUBLIC_DEITY_API_KEY"
         }
       },
       "production": {}
