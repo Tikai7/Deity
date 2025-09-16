@@ -21,7 +21,8 @@
         "backgroundColor": "#036E74"
       },
       "package": "com.tikai7.Deity",
-      "versionCode": 3
+      "versionCode": 3,
+      "targetSdkVersion": 35
     },
     "web": {
       "favicon": "./assets/favicon.png"
