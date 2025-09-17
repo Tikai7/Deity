@@ -148,10 +148,10 @@ export default function Prices({handleVisible}){
                 </Modal>
 
                 <View style={{flex:1,flexDirection:"row",marginTop:isIOS ? "-10%" : "0%", marginBottom:"5%", justifyContent:"space-around"}}>
-                    <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
+                    <TouchableOpacity style={{marginRight:"-10%", zIndex:99}} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
-                    <Text style={{...textStyles.title, fontSize:25, marginRight:"0%", alignSelf:"center"}}>Prix des gâteaux</Text>
+                    <Text style={{...textStyles.title, fontSize:25, marginRight:"-10%", alignSelf:"center"}}>Prix des gâteaux</Text>
                 </View>
                 <View style={{...containerStyles.cakeContainer, flexDirection:"column", width:"100%"}}>
                     <View style={{ width: "90%",marginBottom:"5%", flexDirection: "row", justifyContent:"space-around" }}>

@@ -36,10 +36,10 @@ export default function History({handleVisible}){
         <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:isIOS ? "35%" : "15%", width:"100%"}}>
             <View style={containerStyles.mainContainer}>
                 <View style={{flex:1,flexDirection:"row",marginTop: isIOS ? "-10%" : "0%", marginBottom:"5%", justifyContent:"space-around"}}>
-                    <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
+                    <TouchableOpacity style={{marginRight:"-10%", zIndex:99}} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
-                    <Text style={{...textStyles.title, fontSize:25, marginRight:"0%", alignSelf:"center"}}>Historique</Text>
+                    <Text style={{...textStyles.title, fontSize:25, marginRight:"-10%", alignSelf:"center"}}>Historique</Text>
                 </View>
             </View>
             <Modal visible={visibleCake} animationType='slide' transparent={true} >

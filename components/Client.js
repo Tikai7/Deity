@@ -209,9 +209,9 @@ export default function Client({
                 return
         
 
-            totalCake1 = stockGateau - nbGateau
-            totalCake2 = stockGateau2 - nbGateau2
-            totalCake3 = stockGateau3 - nbGateau3
+            let totalCake1 = stockGateau - nbGateau
+            let totalCake2 = stockGateau2 - nbGateau2
+            let totalCake3 = stockGateau3 - nbGateau3
 
             if (selectedClient?.nbGateau !== undefined){
                 totalCake1 += selectedClient.nbGateau
@@ -229,8 +229,8 @@ export default function Client({
             await storeMyData(`${CAKE}2`, totalCake2)
             await storeMyData(`${CAKE}3`, totalCake3)
 
-            uid = generateUID("CLIENT")
-            groupUID = generateUID("GROUP")
+            let uid = generateUID("CLIENT")
+            let groupUID = generateUID("GROUP")
             if (selectedClient?.groupUID !== undefined){
                 groupUID = selectedClient.groupUID
             }

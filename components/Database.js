@@ -63,10 +63,10 @@ export default function Database({ handleVisible }) {
                 </Modal>
 
                 <View style={{ flex: 1, flexDirection: "row", marginTop: isIOS ? "-10%" : "0%", marginBottom: "5%", justifyContent: "space-around" }}>
-                    <TouchableOpacity style={{ marginLeft: "10%", zIndex: 99 }} onPress={handleVisible}>
+                    <TouchableOpacity style={{ marginRight: "-10%", zIndex: 99 }} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
-                    <Text style={{ ...textStyles.title, fontSize: 25, marginRight: "0%", alignSelf: "center" }}>Base de données</Text>
+                    <Text style={{ ...textStyles.title, fontSize: 25, marginRight: "-10%", alignSelf: "center" }}>Base de données</Text>
                 </View>
 
                 <TouchableOpacity onPress={handleExport} style={{ ...buttonStyles.primaryButton, height: 50, flexDirection: "row", marginTop: "40%", alignItems: "center" }}>
