@@ -26,13 +26,28 @@ export default function Info({handleVisible, selectedClient}){
         longitudeDelta: 0.01,
     };
 
-    function openMap(address){
+    useEffect(()=>{
+        console.log("[INFO] Client changed : ", selectedClient)
+    },[selectedClient])
+
+    function openMap(address) {
+        const query = encodeURIComponent(address);
         const url = Platform.select({
-            ios: `http://maps.apple.com/?q=${address}`,
-            android: `geo:0,0?q=${address}`,
+            ios: `comgooglemaps://?q=${query}`, 
+            android: `geo:0,0?q=${query}`,      
         });
-      
-        Linking.openURL(url);
+
+        if (Platform.OS === "ios") {
+            Linking.canOpenURL(url).then((supported) => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+            }
+            });
+        } else {
+            Linking.openURL(url);
+        }
     }
 
 
@@ -139,7 +154,7 @@ export default function Info({handleVisible, selectedClient}){
 
             <View style={{marginVertical:"4%"}}/>
             <TouchableOpacity onPress={handleUpdateClient} style={{...buttonStyles.primaryButton, height:50, marginBottom:"3%"}}>
-                <Text style={textStyles.secondaryText}>Nouvelle commande</Text>
+                <Text style={textStyles.secondaryText}>Nouvelle commande ?</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={handleValidate}>
                 <Text style={{...textStyles.secondaryText, color:PALETTE.error}}>Supprimer Client</Text>

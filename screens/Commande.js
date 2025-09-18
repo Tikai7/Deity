@@ -49,8 +49,10 @@ export default function Commande(){
     }
 
     function handleSeeMore(item){
-        setClientItem({...item})
-        handleVisible()
+        if (item !== undefined){
+            setClientItem({...item})
+            handleVisible()
+        }
     }
 
     function renderClient({item}) {

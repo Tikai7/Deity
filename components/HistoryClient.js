@@ -28,7 +28,7 @@ export default function HistoryClient({ handleVisible, clientGroupID }) {
     function renderCommande({ item, index }) {
         return (
             <View key={index} style={{ justifyContent: "flex-start", alignItems: "flex-start", paddingVertical: 10, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: PALETTE.tertiary }}>
-                <Text style={{ ...textStyles.primaryText, color: PALETTE.white }}>Commande #{index + 1}</Text>
+                <Text style={{ ...textStyles.primaryText, color: PALETTE.white }}>Commande #{item.isUpdated ? index : index + 1} {item.isUpdated ? <Text style={{ ...textStyles.primaryText, color: PALETTE.success }}>(Modifiée)</Text> : ""}</Text>
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nom : {item.nom}</Text>
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Adresse : {item.adresse}</Text>
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Date d'ajout : {convertDate(item.dateAjoutDB)}</Text>
@@ -42,10 +42,10 @@ export default function HistoryClient({ handleVisible, clientGroupID }) {
     return (
         <View style={{ backgroundColor: PALETTE.primary, paddingTop:isIOS ? "20%" : "15%", paddingHorizontal: 15, flex: 1, paddingBottom:"10%"}}>
             <View style={{ flexDirection: "row", marginBottom: "5%", justifyContent: "space-around" }}>
-                <TouchableOpacity onPress={handleVisible}>
+                <TouchableOpacity onPress={handleVisible} style={{zIndex:99}}>
                     <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                 </TouchableOpacity>
-                <Text style={{ ...textStyles.title, fontSize: 25, alignSelf: "center" }}>Historique</Text>
+                <Text style={{ ...textStyles.title, fontSize: 25, alignSelf: "center", marginLeft:"-5%" }}>Historique</Text>
             </View>
             
             {history.length === 0 ? (

@@ -33,9 +33,9 @@ export default function Client({
     const [nbGateau3, setNbGateau3] = useState(0);
     const [dateAjout, setDateAjout] = useState(new Date());
 
-    const[stockGateau, setStockGateau] = useState(0);
-    const[stockGateau2, setStockGateau2] = useState(0);
-    const[stockGateau3, setStockGateau3] = useState(0);
+    const [stockGateau, setStockGateau] = useState(0);
+    const [stockGateau2, setStockGateau2] = useState(0);
+    const [stockGateau3, setStockGateau3] = useState(0);
 
     const [prixGateau1, setPrixGateau1] = useState(0)
     const [prixGateau2, setPrixGateau2] = useState(0)
@@ -125,35 +125,37 @@ export default function Client({
 
         const setDataIfExist = () => {
 
-            if (selectedClient?.nom !== undefined){
-                setNom(selectedClient.nom)
-                setPlaceholderNom(selectedClient.nom)
-            }
+            if (selectedClient !== undefined){
 
-            if (selectedClient?.adresse !== undefined){
-                setAdresse(selectedClient.adresse)
-                setPlaceholderAdresse(selectedClient.adresse)
-            }
+                if (selectedClient?.nom !== undefined){
+                    setNom(selectedClient.nom)
+                    setPlaceholderNom(selectedClient.nom)
+                }
 
-            if (selectedClient?.nbGateau !== undefined){
-                setNbGateau(selectedClient.nbGateau)
-                setPlaceholderGateau1(`${selectedClient.nbGateau}`)
-            }
+                if (selectedClient?.adresse !== undefined){
+                    setAdresse(selectedClient.adresse)
+                    setPlaceholderAdresse(selectedClient.adresse)
+                }
 
-            if (selectedClient?.nbGateau2 !== undefined){
-                setNbGateau2(selectedClient.nbGateau2)
-                setPlaceholderGateau2(`${selectedClient.nbGateau2}`)
-            }
+                if (selectedClient?.nbGateau !== undefined){
+                    setNbGateau(selectedClient.nbGateau)
+                    setPlaceholderGateau1(`${selectedClient.nbGateau}`)
+                }
 
-            if (selectedClient?.nbGateau3 !== undefined){
-                setNbGateau3(selectedClient.nbGateau3)
-                setPlaceholderGateau3(`${selectedClient.nbGateau3}`)
-            }
+                if (selectedClient?.nbGateau2 !== undefined){
+                    setNbGateau2(selectedClient.nbGateau2)
+                    setPlaceholderGateau2(`${selectedClient.nbGateau2}`)
+                }
 
-            if (selectedClient?.dateAjout !== undefined){
-                setDateAjout(selectedClient.dateAjout)
-            }
+                if (selectedClient?.nbGateau3 !== undefined){
+                    setNbGateau3(selectedClient.nbGateau3)
+                    setPlaceholderGateau3(`${selectedClient.nbGateau3}`)
+                }
 
+                if (selectedClient?.dateAjout !== undefined){
+                    setDateAjout(selectedClient.dateAjout)
+                }
+            }
             console.log("[INFO] Selected client : ", selectedClient)
 
         }
@@ -163,6 +165,46 @@ export default function Client({
 
     },[refresh])
 
+    useEffect(()=>{
+          const setDataIfExist = () => {
+
+            if (selectedClient !== undefined){
+
+                if (selectedClient?.nom !== undefined){
+                    setNom(selectedClient.nom)
+                    setPlaceholderNom(selectedClient.nom)
+                }
+
+                if (selectedClient?.adresse !== undefined){
+                    setAdresse(selectedClient.adresse)
+                    setPlaceholderAdresse(selectedClient.adresse)
+                }
+
+                if (selectedClient?.nbGateau !== undefined){
+                    setNbGateau(selectedClient.nbGateau)
+                    setPlaceholderGateau1(`${selectedClient.nbGateau}`)
+                }
+
+                if (selectedClient?.nbGateau2 !== undefined){
+                    setNbGateau2(selectedClient.nbGateau2)
+                    setPlaceholderGateau2(`${selectedClient.nbGateau2}`)
+                }
+
+                if (selectedClient?.nbGateau3 !== undefined){
+                    setNbGateau3(selectedClient.nbGateau3)
+                    setPlaceholderGateau3(`${selectedClient.nbGateau3}`)
+                }
+
+                if (selectedClient?.dateAjout !== undefined){
+                    setDateAjout(selectedClient.dateAjout)
+                }
+            }
+            console.log("[INFO] Selected client changed : ", selectedClient)
+
+        }
+
+        setDataIfExist()
+    },[selectedClient])
 
     async function addToHistory(client) {
         try {
@@ -202,29 +244,39 @@ export default function Client({
         return false
     }
 
-    async function handleAddClient() {
+    async function handleAddClient(isUpdating) {
         try {
 
-            if (notGoodClient())
+            if (notGoodClient()){
+                console.log("[WARNING] Client not completed")
                 return
-        
+            }
 
-            let totalCake1 = stockGateau - nbGateau
-            let totalCake2 = stockGateau2 - nbGateau2
-            let totalCake3 = stockGateau3 - nbGateau3
+            let totalCake1 = stockGateau - nbGateau 
+            let totalCake2 = stockGateau2 - nbGateau2 
+            let totalCake3 = stockGateau3 - nbGateau3 
 
-            if (selectedClient?.nbGateau !== undefined){
+            if (selectedClient?.nbGateau !== undefined && isUpdating){
                 totalCake1 += selectedClient.nbGateau
             }
 
-            if (selectedClient?.nbGateau2 !== undefined){
+            if (selectedClient?.nbGateau2 !== undefined && isUpdating){
                 totalCake2 += selectedClient.nbGateau2
             }
 
-            if (selectedClient?.nbGateau3 !== undefined){
+            if (selectedClient?.nbGateau3 !== undefined && isUpdating){
                 totalCake3 += selectedClient.nbGateau3
             }   
 
+            if (totalCake1 < 0 || totalCake2 < 0 || totalCake3 < 0){
+                console.log("[ERROR] Stock insuffisant")
+                showMessage({
+                    message: "Le Stock est insuffisant !",
+                    type: "danger",
+                });
+                return 
+            }
+            
             await storeMyData(`${CAKE}1`, totalCake1)
             await storeMyData(`${CAKE}2`, totalCake2)
             await storeMyData(`${CAKE}3`, totalCake3)
@@ -261,11 +313,13 @@ export default function Client({
                 prixGateau2: prixGateau2,
                 prixGateau3: prixGateau3,
                 uid: uid,
-                groupUID: groupUID
+                groupUID: groupUID,
+                isUpdated : isUpdating
             }
 
             const s = await storeMyData(keyToStore, client)
             console.log("[INFO] Client stored state: ", s)
+            
             let s3 = true
             if (action !== "Ajouter commande"){
                 clientCount = clientCount+1
@@ -276,6 +330,7 @@ export default function Client({
                 s3 = await addToHistory(client)
                 console.log("[INFO] Client added to history : ", s3)
             }
+            
 
             const s2 = await storeMyData(CLIENT_COUNT, `${clientCount}`)
             console.log("[INFO] Client count stored state: ", s2)
@@ -295,47 +350,39 @@ export default function Client({
     function handleCake1(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            const totalStock = selectedClient?.nbGateau ? stockGateau + selectedClient.nbGateau : stockGateau
-
-            if (value <= totalStock || isNaN(value))
-                setNbGateau(text === "" ? 0 : value);
-            else
+            if (!(value <= stockGateau || isNaN(value)))
                 showMessage({
-                    message: "Vous n'en avez pas suffisamment en stock",
+                    message: "Attention, vous n'en avez pas suffisamment en stock si vous souhaitez ajouter une commande",
                     type: "warning",
                 });
-            
+            setNbGateau(text === "" ? 0 : value);
         }
     }
 
     function handleCake2(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            const totalStock = selectedClient?.nbGateau2 ? stockGateau2 + selectedClient.nbGateau2 : stockGateau2
-
-            if (value <= totalStock || isNaN(value))
-                setNbGateau2(text === "" ? 0 : value);
-            else
+            if (!(value <= stockGateau2 || isNaN(value)))
                 showMessage({
-                    message: "Vous n'en avez pas suffisamment en stock",
+                    message: "Attention, vous n'en avez pas suffisamment en stock si vous souhaitez ajouter une commande",
                     type: "warning",
                 });
-        
+
+            setNbGateau2(text === "" ? 0 : value);
+
         }
     }
 
     function handleCake3(text) {
         if (/^\d*$/.test(text)) {
             const value = parseInt(text, 10)
-            const totalStock = selectedClient?.nbGateau3 ? stockGateau3 + selectedClient.nbGateau3 : stockGateau3
-
-            if (value <= totalStock || isNaN(value))
-                setNbGateau3(text === "" ? 0 : value);
-            else
+            if (!(value <= stockGateau3 || isNaN(value)))
                 showMessage({
-                    message: "Vous n'en avez pas suffisamment en stock",
+                    message: "Attention, vous n'en avez pas suffisamment en stock si vous souhaitez ajouter une commande",
                     type: "warning",
                 });
+
+            setNbGateau3(text === "" ? 0 : value);
         }
     }
 
@@ -401,12 +448,12 @@ export default function Client({
                 </View>
 
                 <View style={{flex:0.1}}></View>
-                <TouchableOpacity onPress={()=>handleAddClient()} style={{ ...buttonStyles.primaryButton, height:50, marginTop: "20%" }}>
+                <TouchableOpacity onPress={()=>handleAddClient(false)} style={{ ...buttonStyles.primaryButton, height:50, marginTop: "20%" }}>
                     <Text style={textStyles.secondaryText}>{action}</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={handleVisible} style={{...buttonStyles.secondaryButton, height:50,}}>
-                    <Text style={textStyles.primaryText}>Annuler</Text>
-                </TouchableOpacity> */}
+                {action !== "Ajouter" && <TouchableOpacity onPress={()=>handleAddClient(true)} style={{...buttonStyles.secondaryButton, height:50,}}>
+                    <Text style={textStyles.primaryText}>Modifier la commande ?</Text>
+                </TouchableOpacity>}
             </View>
             <FlashMessage position="top" style={{marginTop: isIOS ? "-35%" : "0%"}}/>
 
