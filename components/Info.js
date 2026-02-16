@@ -31,7 +31,7 @@ export default function Info({handleVisible, selectedClient}){
     },[selectedClient])
 
     function openMap(address) {
-        const query = encodeURIComponent(address);
+        const query = encodeURIComponent(address || ''); // garde-fou
         const url = Platform.select({
             ios: `comgooglemaps://?q=${query}`, 
             android: `geo:0,0?q=${query}`,      
@@ -50,7 +50,6 @@ export default function Info({handleVisible, selectedClient}){
         }
     }
 
-
     function handleValidate(){
         setVisibleValidation(old=>!old)
     }
@@ -58,7 +57,6 @@ export default function Info({handleVisible, selectedClient}){
     function handleVisibleClient(){
         setRefresh(old=>!old)
         setVisible(old=>!old)
-
     }
 
     function handleUpdateClient(){
@@ -69,33 +67,39 @@ export default function Info({handleVisible, selectedClient}){
         setVisibleHistory(old=>!old)
     }
 
-
-
     return(
         <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop:isIOS ? "35%" : "15%", width:"100%"}}>
-        <Modal visible={visibleHistory} animationType="slide">
-            <HistoryClient 
-                handleVisible={handleHistory} 
-                clientGroupID={selectedClient.groupUID}
-            />
-        </Modal>
+        {/* Monte les Modals enfants uniquement quand visibles + onRequestClose pour Android */}
+        {visibleHistory && (
+          <Modal visible animationType="slide" onRequestClose={handleHistory}>
+              <HistoryClient 
+                  handleVisible={handleHistory} 
+                  clientGroupID={selectedClient?.groupUID}
+              />
+          </Modal>
+        )}
 
-        <Modal visible={visible} animationType="slide">
-            <Client 
-                handleVisibleParent={handleVisible}
-                handleVisible={handleVisibleClient} 
-                selectedClient={selectedClient} 
-                action="Ajouter commande"
-                title='Nouvelle Commande'
-            />
-        </Modal>
-        <Modal visible={visibleValidation} animationType="fade" transparent>
-            <Validate 
-                handleVisible={handleValidate} 
-                handleVisibleParent={handleVisible}
-                selectedClient={selectedClient} 
-            />
-        </Modal>
+        {visible && (
+          <Modal visible animationType="slide" onRequestClose={handleVisibleClient}>
+              <Client 
+                  handleVisibleParent={handleVisible}
+                  handleVisible={handleVisibleClient} 
+                  selectedClient={selectedClient} 
+                  action="Ajouter commande"
+                  title='Nouvelle Commande'
+              />
+          </Modal>
+        )}
+
+        {visibleValidation && (
+          <Modal visible animationType="fade" transparent onRequestClose={handleValidate}>
+              <Validate 
+                  handleVisible={handleValidate} 
+                  handleVisibleParent={handleVisible}
+                  selectedClient={selectedClient} 
+              />
+          </Modal>
+        )}
 
         <View style={containerStyles.clientContainer}>
             <View style={{flex:1, flexDirection:"row", marginTop:isIOS ? "-10%" : "0%", justifyContent:"center", paddingHorizontal:"5%"}}>
@@ -108,53 +112,68 @@ export default function Info({handleVisible, selectedClient}){
                 </TouchableOpacity>
             </View>
 
-            <View style={{width:"100%", justifyContent:"center",alignItems:"center", marginTop:"5%"}}>
+            <View style={{width:"100%", justifyContent:"center", marginLeft: "20%", alignItems:"flex-start", marginTop:"5%"}}>
                 <View style={{alignItems:"flex-start", width:"78%"}}>
-                    <Text style={textStyles.primaryText}>Nom : <Text style={{color:PALETTE.tertiary}}>{selectedClient.nom}</Text></Text>
-                    <Text style={textStyles.primaryText}>Date d'ajout : <Text style={{color:PALETTE.tertiary}}>{convertDate(selectedClient.dateAjout)}</Text></Text>
-                    <Text style={textStyles.primaryText}>Prix total : <Text style={{color:PALETTE.success}}>{selectedClient.prixTotal} DZD</Text></Text>
+                    <Text style={textStyles.primaryText}>Nom : <Text style={{color:PALETTE.tertiary}}>{selectedClient?.nom ?? '—'}</Text></Text>
+                    <Text style={textStyles.primaryText}>Date d'ajout : <Text style={{color:PALETTE.tertiary}}>
+                      {selectedClient?.dateAjout ? convertDate(selectedClient.dateAjout) : '—'}
+                    </Text></Text>
+                    <Text style={textStyles.primaryText}>Prix total : <Text style={{color:PALETTE.success}}>{selectedClient?.prixTotal ?? 0} DZD</Text></Text>
                 </View>
-                <MapView
-                    style={{ width: "80%", height: 100, borderRadius : 10, marginVertical: 20 }}
-                    initialRegion={clientCoordinates}
-                >
-                    <Marker coordinate={clientCoordinates} />
-                </MapView>
 
+                {/* Fix Android: pas de MapView dans un Modal -> remplace par un bouton d'ouverture Maps */}
+                {Platform.OS === 'android' ? (
+                  <TouchableOpacity
+                    onPress={() => openMap(selectedClient?.adresse)}
+                    style={{ 
+                        width: "80%", height: 100, borderRadius : 10, marginVertical: 20, backgroundColor:'rgba(255,255,255,0.08)', 
+                        alignItems:'center', justifyContent:'center' }}
+                  >
+                    <Text style={{color:PALETTE.white}}>Ouvrir l'adresse dans Maps</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <MapView
+                      style={{ width: "80%", height: 100, borderRadius : 10, marginVertical: 20 }}
+                      initialRegion={clientCoordinates}
+                  >
+                      <Marker coordinate={clientCoordinates} />
+                  </MapView>
+                )}
 
                 <View style={{flexDirection:"row", alignItems:"center", marginTop:5}}>
-                    <TouchableOpacity style={{marginBottom:5, flexDirection:"row", alignItems:"flex-end"}} onPress={() => openMap(selectedClient.adresse)}>
-                        <Text style={textStyles.primaryText}>Adresse : {selectedClient.adresse}</Text>
+                    <TouchableOpacity style={{marginBottom:5, flexDirection:"row", alignItems:"flex-end"}} onPress={() => openMap(selectedClient?.adresse)}>
+                        <Text style={textStyles.primaryText}>Adresse : {selectedClient?.adresse ?? '—'}</Text>
                         <SimpleLineIcons name="share-alt" size={20} color={PALETTE.white} style={{marginLeft:5}} />
                     </TouchableOpacity>
+                </View>
+                <View style={{flexDirection:"row", alignItems:"center", marginTop:5}}>
+                    <Text style={textStyles.primaryText}>Secteur : {selectedClient?.secteur ?? '—'}</Text>
                 </View>
 
             </View>
             <View style={containerStyles.cakeContainer}>
                 <View style={{ width: "27%", flexDirection: "column" }}>
                     <Image source={require('../images/gateau1.jpg')} style={containerStyles.cake} />
-                    <Text style={textStyles.cakeNumber}>{selectedClient.nbGateau}</Text>
-                    <Text style={{...textStyles.cakeNumber, fontSize:10, color:PALETTE.tertiary}}>{selectedClient.prixGateau1} DZD</Text>
-
+                    <Text style={textStyles.cakeNumber}>{selectedClient?.nbGateau ?? 0}</Text>
+                    <Text style={{...textStyles.cakeNumber, fontSize:10, color:PALETTE.tertiary}}>{selectedClient?.prixGateau1 ?? 0} DZD</Text>
                 </View>
 
                 <View style={{ width: "27%", flexDirection: "column" }}>
                     <Image source={require('../images/gateau2.jpg')} style={containerStyles.cake} />
-                    <Text style={textStyles.cakeNumber}>{selectedClient.nbGateau2}</Text>
-                    <Text style={{...textStyles.cakeNumber, fontSize:10, color:PALETTE.tertiary}}>{selectedClient.prixGateau2} DZD</Text>
-
+                    <Text style={textStyles.cakeNumber}>{selectedClient?.nbGateau2 ?? 0}</Text>
+                    <Text style={{...textStyles.cakeNumber, fontSize:10, color:PALETTE.tertiary}}>{selectedClient?.prixGateau2 ?? 0} DZD</Text>
                 </View>
 
                 <View style={{ width: "27%", flexDirection: "column" }}>
                     <Image source={require('../images/gateau3.jpg')} style={containerStyles.cake} />
-                    <Text style={textStyles.cakeNumber}>{selectedClient.nbGateau3}</Text>
-                    <Text style={{...textStyles.cakeNumber, fontSize:10, color:PALETTE.tertiary}}>{selectedClient.prixGateau3} DZD</Text>
+                    <Text style={textStyles.cakeNumber}>{selectedClient?.nbGateau3 ?? 0}</Text>
+                    <Text style={{...textStyles.cakeNumber, fontSize:10, color:PALETTE.tertiary}}>{selectedClient?.prixGateau3 ?? 0} DZD</Text>
                 </View>
             </View>
 
             <View style={{marginVertical:"4%"}}/>
             <TouchableOpacity onPress={handleUpdateClient} style={{...buttonStyles.primaryButton, height:50, marginBottom:"3%"}}>
-                <Text style={textStyles.secondaryText}>Nouvelle commande ?</Text>
+                <Text style={textStyles.secondaryText}>Plus d'actions</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{...buttonStyles.secondaryButton, height:50, borderColor:PALETTE.error}} onPress={handleValidate}>
                 <Text style={{...textStyles.secondaryText, color:PALETTE.error}}>Supprimer Client</Text>
@@ -163,4 +182,3 @@ export default function Info({handleVisible, selectedClient}){
         </ScrollView>
     )
 }
-

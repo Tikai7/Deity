@@ -29,12 +29,13 @@ export default function HistoryClient({ handleVisible, clientGroupID }) {
         return (
             <View key={index} style={{ justifyContent: "flex-start", alignItems: "flex-start", paddingVertical: 10, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: PALETTE.tertiary }}>
                 <Text style={{ ...textStyles.primaryText, color: PALETTE.white }}>Commande #{item.isUpdated ? index : index + 1} {item.isUpdated ? <Text style={{ ...textStyles.primaryText, color: PALETTE.success }}>(Modifiée)</Text> : ""}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nom : {item.nom}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Adresse : {item.adresse}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Date d'ajout : {convertDate(item.dateAjoutDB)}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix total : {item.prixTotal} DZD</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix gâteaux : G1({item.prixGateau1}), G2({item.prixGateau2}), G3({item.prixGateau3})</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nombre de gâteaux : G1({item.nbGateau}), G2({item.nbGateau2}), G3({item.nbGateau3})</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nom : {item?.nom}</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Adresse : {item?.adresse}</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Secteur : {item?.secteur}</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Date d'ajout : {convertDate(item?.dateAjoutDB)}</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix total : {item?.prixTotal} DZD</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix gâteaux : G1({item?.prixGateau1}), G2({item?.prixGateau2}), G3({item?.prixGateau3})</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nombre de gâteaux : G1({item?.nbGateau}), G2({item?.nbGateau2}), G3({item?.nbGateau3})</Text>
             </View>
         );
     }

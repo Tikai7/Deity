@@ -10,7 +10,6 @@ import { waitingTime } from '../utils/Function';
 import { CAKE } from '../utils/Function';
 import FlashMessage from "react-native-flash-message";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-
 import { showMessage } from "react-native-flash-message";
 
 
@@ -22,12 +21,19 @@ export default function Client({
 
     const [placeholderNom, setPlaceholderNom] = useState("Nom")
     const [placeholderAdresse, setPlaceholderAdresse] = useState("Adresse")
+    const [placeholderSecteur, setPlaceholderSecteur] = useState("Secteur")
     const [placeholderGateau1, setPlaceholderGateau1] = useState("0")
     const [placeholderGateau2, setPlaceholderGateau2] = useState("0")
     const [placeholderGateau3, setPlaceholderGateau3] = useState("0")
 
+    const [placeholderPriceGateau1, setPlaceholderPriceGateau1] = useState("0 DZD")
+    const [placeholderPriceGateau2, setPlaceholderPriceGateau2] = useState("0 DZD")
+    const [placeholderPriceGateau3, setPlaceholderPriceGateau3] = useState("0 DZD")
+    
+
     const [nom, setNom] = useState("");
     const [adresse, setAdresse] = useState("");
+    const [secteur, setSecteur] = useState("");
     const [nbGateau, setNbGateau] = useState(0);
     const [nbGateau2, setNbGateau2] = useState(0);
     const [nbGateau3, setNbGateau3] = useState(0);
@@ -45,19 +51,9 @@ export default function Client({
     const [visible, setVisible] = useState(false);
     const [state, setState] = useState(false);
 
+    
     const {refresh, setRefresh, isIOS} = useContext(Data)
 
-
-    // async function handleAnimation(time) {
-    //     setVisible(true);
-    //     setTimeout(() => {
-    //         setVisible(false);
-    //         if (!isHome){
-    //             handleVisible();
-    //             // handleVisibleParent()
-    //         }
-    //     } , time);
-    // }
 
     async function handleAnimation(time) {
         setVisible(true);
@@ -84,29 +80,10 @@ export default function Client({
             const g1 = await getMyData(`${CAKE}1`)
             const g2 = await getMyData(`${CAKE}2`)
             const g3 = await getMyData(`${CAKE}3`)
-
-            const prixG1 = await getMyData(`${CAKE}1_price`)
-            const prixG2 = await getMyData(`${CAKE}2_price`)
-            const prixG3 = await getMyData(`${CAKE}3_price`)
-            
     
             console.log("[INFO] Stock Gateau 1 : ", g1)
             console.log("[INFO] Stock Gateau 2 : ", g2)
             console.log("[INFO] Stock Gateau 3 : ", g3)
-
-            if (prixG1 !== null)
-                setPrixGateau1(prixG1)
-            else
-                setPrixGateau1(0)
-            if (prixG2 !== null)
-                setPrixGateau2(prixG2)
-            else
-                setPrixGateau2(0)
-
-            if (prixG3 !== null)
-                setPrixGateau3(prixG3)
-            else
-                setPrixGateau3(0)
 
 
             if (g1 !== null)
@@ -137,6 +114,11 @@ export default function Client({
                     setPlaceholderAdresse(selectedClient.adresse)
                 }
 
+                if (selectedClient?.secteur !== undefined){
+                    setSecteur(selectedClient.secteur)
+                    setPlaceholderSecteur(selectedClient.secteur)
+                }
+
                 if (selectedClient?.nbGateau !== undefined){
                     setNbGateau(selectedClient.nbGateau)
                     setPlaceholderGateau1(`${selectedClient.nbGateau}`)
@@ -155,6 +137,20 @@ export default function Client({
                 if (selectedClient?.dateAjout !== undefined){
                     setDateAjout(selectedClient.dateAjout)
                 }
+
+                if (selectedClient?.prixGateau1 !== undefined){
+                    setPrixGateau1(selectedClient.prixGateau1)
+                    setPlaceholderPriceGateau1(`${selectedClient.prixGateau1} DZD`)
+                }
+                if (selectedClient?.prixGateau2 !== undefined){
+                    setPrixGateau2(selectedClient.prixGateau2)
+                    setPlaceholderPriceGateau2(`${selectedClient.prixGateau2} DZD`)
+                }
+                if (selectedClient?.prixGateau3 !== undefined){
+                    setPrixGateau3(selectedClient.prixGateau3)
+                    setPlaceholderPriceGateau3(`${selectedClient.prixGateau3} DZD`)
+                }
+
             }
             console.log("[INFO] Selected client : ", selectedClient)
 
@@ -198,6 +194,19 @@ export default function Client({
                 if (selectedClient?.dateAjout !== undefined){
                     setDateAjout(selectedClient.dateAjout)
                 }
+
+                if (selectedClient?.prixGateau1 !== undefined){
+                    setPrixGateau1(selectedClient.prixGateau1)
+                    setPlaceholderPriceGateau1(`${selectedClient.prixGateau1} DZD`)
+                }
+                if (selectedClient?.prixGateau2 !== undefined){
+                    setPrixGateau2(selectedClient.prixGateau2)
+                    setPlaceholderPriceGateau2(`${selectedClient.prixGateau2} DZD`)
+                }
+                if (selectedClient?.prixGateau3 !== undefined){
+                    setPrixGateau3(selectedClient.prixGateau3)
+                    setPlaceholderPriceGateau3(`${selectedClient.prixGateau3} DZD`)
+                }
             }
             console.log("[INFO] Selected client changed : ", selectedClient)
 
@@ -225,6 +234,8 @@ export default function Client({
 
     
     function notGoodClient(){
+
+
         if ((!nbGateau && !nbGateau2 && !nbGateau3)){
             showMessage({
                 message: "Le nombre de gateaux doit être supérieure à 0",
@@ -233,9 +244,17 @@ export default function Client({
             return true
         }
 
-        if (nom == "" || adresse == ""){
+        if (nom == "" || adresse == "" || secteur == ""){
             showMessage({
-                message: "Le nom et l'adresse doivent être renseigné",
+                message: "Le nom, l'adresse et le secteur doivent être renseignés",
+                type: "danger",
+            });
+            return true
+        }
+
+        if ((prixGateau1 <= 0) || (prixGateau2 <= 0) || (prixGateau3 <= 0)){
+            showMessage({
+                message: "Le prix des gateaux ne peut pas être négatif ou non renseigné",
                 type: "danger",
             });
             return true
@@ -308,6 +327,7 @@ export default function Client({
                 nbGateau3: nbGateau3,
                 dateAjout : dateAjout,
                 dateAjoutDB : new Date(),
+                secteur: secteur,
                 prixTotal: (nbGateau * prixGateau1) + (nbGateau2 * prixGateau2) + (nbGateau3 * prixGateau3),
                 prixGateau1: prixGateau1,
                 prixGateau2: prixGateau2,
@@ -390,11 +410,31 @@ export default function Client({
         Keyboard.dismiss();
     }
 
+    function handleCakePrice(text, id) {
+        if (/^\d*$/.test(text)) {
+            const value = parseInt(text, 10)
+            if (value < 0 || isNaN(value))
+                showMessage({
+                    message: "Le prix ne peut pas être négatif",
+                    type: "warning",
+                });       
+
+            if (id === "1")
+                setPrixGateau1(text === "" ? 0 : value);
+            else if (id === "2")
+                setPrixGateau2(text === "" ? 0 : value);
+            else if (id === "3")
+                setPrixGateau3(text === "" ? 0 : value);
+        }
+    }
+
     return (
         <TouchableWithoutFeedback onPress={handleScreenTap}>
             <ScrollView style={{backgroundColor:PALETTE.primary, paddingTop: isIOS ? "35%" : "15%", width:"100%"}}>
             <View style={containerStyles.clientContainer}>
-                <View style={{flex:1,flexDirection:"row",marginTop: isIOS ? "-10%" : "0%", marginBottom:"20%", justifyContent:"space-around"}}>
+
+
+                <View style={{flex:1,flexDirection:"row",marginTop: isIOS ? "-10%" : "0%", marginBottom:"10%", justifyContent:"space-around"}}>
                     <TouchableOpacity style={{marginLeft:"10%", zIndex:99}} onPress={handleVisible}>
                         <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
@@ -411,7 +451,8 @@ export default function Client({
 
                 <TextInput defaultValue={action==="Ajouter commande" ? placeholderNom : ""} maxLength={30} onChangeText={(e)=>setNom(e)} placeholder={placeholderNom} style={containerStyles.inputContainer} />
                 <TextInput defaultValue={action==="Ajouter commande" ? placeholderAdresse: ""} maxLength={40} onChangeText={(e)=>setAdresse(e)} placeholder={placeholderAdresse} style={containerStyles.inputContainer} />
-
+                <TextInput defaultValue={action==="Ajouter commande" ? placeholderSecteur : ""} maxLength={30} onChangeText={(e)=>setSecteur(e)} placeholder={placeholderSecteur} style={containerStyles.inputContainer} />
+                
                 <View style={containerStyles.cakeContainer}>
                     <View style={{ width: "27%", flexDirection: "column" }}>
                         <Image source={require('../images/gateau1.jpg')} style={containerStyles.cake} />
@@ -421,6 +462,15 @@ export default function Client({
                             style={textStyles.cakeNumber}
                             placeholder={placeholderGateau1}
                             maxLength={5}
+                        />
+                        <View style={{height:"5%"}}/>
+
+                        <TextInput 
+                            keyboardType='numeric' 
+                            onChangeText={(text) => handleCakePrice(text, "1")} 
+                            style={textStyles.cakePrice}
+                            placeholder={placeholderPriceGateau1}
+                            maxLength={4}
                         />
                     </View>
 
@@ -433,6 +483,15 @@ export default function Client({
                             placeholder={placeholderGateau2}
                             maxLength={5}
                         />
+                        <View style={{height:"5%"}}/>
+
+                        <TextInput 
+                            keyboardType='numeric' 
+                            onChangeText={(text) => handleCakePrice(text, "2")} 
+                            style={textStyles.cakePrice}
+                            placeholder={placeholderPriceGateau2}
+                            maxLength={4}
+                        />
                     </View>
 
                     <View style={{ width: "27%", flexDirection: "column" }}>
@@ -444,6 +503,14 @@ export default function Client({
                             placeholder={placeholderGateau3}
                             maxLength={5}
                         />
+                        <View style={{height:"5%"}}/>
+                        <TextInput 
+                            keyboardType='numeric' 
+                            onChangeText={(text) => handleCakePrice(text, "3")} 
+                            style={textStyles.cakePrice}
+                            placeholder={placeholderPriceGateau3}
+                            maxLength={4}
+                        />
                     </View>
                 </View>
 
@@ -451,9 +518,13 @@ export default function Client({
                 <TouchableOpacity onPress={()=>handleAddClient(false)} style={{ ...buttonStyles.primaryButton, height:50, marginTop: "20%" }}>
                     <Text style={textStyles.secondaryText}>{action}</Text>
                 </TouchableOpacity>
-                {action !== "Ajouter" && <TouchableOpacity onPress={()=>handleAddClient(true)} style={{...buttonStyles.secondaryButton, height:50,}}>
-                    <Text style={textStyles.primaryText}>Modifier la commande ?</Text>
-                </TouchableOpacity>}
+
+                {action !== "Ajouter" && 
+                    <TouchableOpacity onPress={()=>handleAddClient(true)} style={{...buttonStyles.secondaryButton, height:50,}}>
+                        <Text style={textStyles.primaryText}>Modifier la commande</Text>
+                    </TouchableOpacity>
+                }
+
             </View>
             <FlashMessage position="top" style={{marginTop: isIOS ? "-35%" : "0%"}}/>
 

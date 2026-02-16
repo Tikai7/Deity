@@ -61,7 +61,7 @@ export default function History({handleVisible}){
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{width:"100%"}} onPress={() => handleHistoryTypeInfo("prices_history","Prix")}>
+                    {/* <TouchableOpacity style={{width:"100%"}} onPress={() => handleHistoryTypeInfo("prices_history","Prix")}>
                         <View style={{
                             ...containerStyles.commandeContainer, 
                             backgroundColor:PALETTE.primary,
@@ -71,7 +71,7 @@ export default function History({handleVisible}){
                             <MaterialIcons name="history-edu" size={24} color={PALETTE.white} style={{ marginRight: 10 }} />
                             <Text style={textStyles.primaryText}>Historique des prix produits</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <TouchableOpacity style={{width:"100%"}} onPress={handleErrorMessage}>
                         <View style={{
