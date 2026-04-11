@@ -17,6 +17,16 @@ export const fontStyle = {
 }
 
 export const containerStyles = {
+	searchBar : {
+		width: '90%',
+	 	alignSelf: 'center',
+		backgroundColor: '#fff',
+		borderRadius: 10,
+		paddingHorizontal: 10,
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 20
+	},
 	parameterContainer : {
 		width : "100%",
 		height : 50,

@@ -18,6 +18,7 @@ export default function Header({route,navigation}) {
         setVisibleClients(old=>!old)
     }
 
+
     return (
         <View style={containerStyles.headerContainer}>
             <Modal visible={visibleClients} animationType='slide' >
@@ -40,6 +41,19 @@ export default function Header({route,navigation}) {
                 route.name == "Acceuil" ? 
                 <Text style={{...textStyles.headerText, marginLeft:'0%'}}>{route.name}</Text> : 
                 <Text style={{...textStyles.headerText}}>{route.name}</Text>
+            }
+            {
+                // route.name == "Commandes" ?
+                // <TouchableOpacity onPress={handleShowClient}>
+                //     <Feather 
+                //         style={{alignItems:"flex-start", paddingRight:"5%"}}
+                //         name="users"
+                //         size={24}
+                //         color={PALETTE.white}
+                //     />         
+                // </TouchableOpacity>
+                // : null
+
             }
             <TouchableOpacity onPress={handleDrawer}>
                 <Entypo 
