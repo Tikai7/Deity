@@ -6,11 +6,15 @@ import LottieView from "lottie-react-native";
 import { convertDate } from "../utils/Function";
 import { getMyData } from "../utils/DataManager";
 import { Data } from "../context/Data";
+import useCakes from "../hooks/useCakes"; // <-- Import du hook pour avoir tous les gâteaux
 
 export default function HistoryCakes({handleVisible, history_type, info_type}){
     const [history, setHistory] = useState([]);
     const lottieRef = useRef(null);
-    const {refresh, isIOS} = useContext(Data)
+    const {refresh, isIOS} = useContext(Data);
+    
+    // <-- Récupération dynamique de la liste des gâteaux
+    const { cakes } = useCakes(); 
 
     useEffect(() => {
         const getHistory = async () => {
@@ -29,9 +33,23 @@ export default function HistoryCakes({handleVisible, history_type, info_type}){
         return (
             <View key={index} style={{ justifyContent: "flex-start", alignItems: "flex-start", paddingVertical: 10, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: PALETTE.tertiary }}>
                 <Text style={{ ...textStyles.primaryText, color: PALETTE.white }}>Modification #{index + 1}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>{`${info_type} gâteaux 1 : ${item.gateau1}`}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>{`${info_type} gâteaux 2 : ${item.gateau2}`}</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>{`${info_type} gâteaux 3 : ${item.gateau3}`}</Text>
+                
+                {/* Boucle dynamique sur la liste des gâteaux */}
+                {cakes.map((cake) => {
+                    // On récupère la valeur en utilisant la clé attendue (gateau1, gateau2, gateau4, etc.)
+                    const value = item[`gateau${cake.id}`]; 
+                    
+                    // Si le gâteau a une valeur dans cet historique, on l'affiche
+                    if (value !== undefined && value !== null) {
+                        return (
+                            <Text key={cake.id} style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>
+                                {`${info_type} ${cake.name} : ${value}`}
+                            </Text>
+                        );
+                    }
+                    return null;
+                })}
+
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>{`Date de modification : ${convertDate(item.date)}`}</Text>
             </View>
         );

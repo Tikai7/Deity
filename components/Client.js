@@ -253,7 +253,7 @@ export default function Client({
                     </View>
 
                     <View style={{ flex: 0.1 }} />
-                    <TouchableOpacity onPress={() => handleAddClient(false)} style={{ ...buttonStyles.primaryButton, height: 50, marginTop: "4%" }}>
+                    <TouchableOpacity onPress={() => handleAddClient(false)} style={{ ...buttonStyles.primaryButton, height: 50, marginTop: "4%", marginBottom: "2%" }}>
                         <Text style={textStyles.secondaryText}>{action}</Text>
                     </TouchableOpacity>
                     {action !== "Ajouter" &&

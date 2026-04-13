@@ -6,11 +6,14 @@ import { getMyData } from "../utils/DataManager";
 import LottieView from "lottie-react-native";
 import { convertDate } from "../utils/Function";
 import { Data } from "../context/Data";
+import useCakes from "../hooks/useCakes"; // Import dynamique des gâteaux
+import { getCakeQty, getCakePrice } from "../utils/CakesConfig"; // Lecture sécurisée
 
 export default function HistoryClient({ handleVisible, clientGroupID }) {
     const [history, setHistory] = useState([]);
     const lottieRef = useRef(null);
-    const {refresh, isIOS} = useContext(Data)
+    const {refresh, isIOS} = useContext(Data);
+    const { cakes } = useCakes(); // Récupération de tous les gâteaux
 
     useEffect(() => {
         const getHistory = async () => {
@@ -26,6 +29,10 @@ export default function HistoryClient({ handleVisible, clientGroupID }) {
     }, [refresh]);
 
     function renderCommande({ item, index }) {
+        // Construction dynamique des textes pour tous les gâteaux
+        const pricesString = cakes.map(c => `G${c.id}(${getCakePrice(item, c.id) || 0})`).join(', ');
+        const qtyString = cakes.map(c => `G${c.id}(${getCakeQty(item, c.id) || 0})`).join(', ');
+
         return (
             <View key={index} style={{ justifyContent: "flex-start", alignItems: "flex-start", paddingVertical: 10, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: PALETTE.tertiary }}>
                 <Text style={{ ...textStyles.primaryText, color: PALETTE.white }}>Commande #{item.isUpdated ? index : index + 1} {item.isUpdated ? <Text style={{ ...textStyles.primaryText, color: PALETTE.success }}>(Modifiée)</Text> : ""}</Text>
@@ -34,8 +41,8 @@ export default function HistoryClient({ handleVisible, clientGroupID }) {
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Secteur : {item?.secteur}</Text>
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Date d'ajout : {convertDate(item?.dateAjoutDB)}</Text>
                 <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix total : {item?.prixTotal} DZD</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix gâteaux : G1({item?.prixGateau1}), G2({item?.prixGateau2}), G3({item?.prixGateau3})</Text>
-                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nombre de gâteaux : G1({item?.nbGateau}), G2({item?.nbGateau2}), G3({item?.nbGateau3})</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Prix gât. : {pricesString}</Text>
+                <Text style={{ ...textStyles.secondaryText, color: PALETTE.tertiary, marginTop: 2 }}>Nombre de gât. : {qtyString}</Text>
             </View>
         );
     }

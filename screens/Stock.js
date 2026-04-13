@@ -26,7 +26,6 @@ export default function Stock() {
         const load = async () => {
             const newQty = {};
             for (const cake of cakes) {
-                // readCakeStock cherche nouveau format puis ancien en fallback
                 newQty[cake.id] = await readCakeStock(cake.id);
             }
             setQuantities(newQty);
@@ -58,12 +57,9 @@ export default function Stock() {
             }
 
             const histEntry = { date: new Date() };
+            // On enregistre avec la même logique dynamique partout: gateau1, gateau2, gateau4, etc.
             for (const cake of cakes) {
-                histEntry[`gateau_${cake.id}`] = quantities[cake.id] ?? 0;
-                // alias rétro-compat
-                if (cake.id === 1) histEntry.gateau1 = quantities[1] ?? 0;
-                if (cake.id === 2) histEntry.gateau2 = quantities[2] ?? 0;
-                if (cake.id === 3) histEntry.gateau3 = quantities[3] ?? 0;
+                histEntry[`gateau${cake.id}`] = quantities[cake.id] ?? 0;
             }
 
             const s4 = await addToHistory(histEntry);
