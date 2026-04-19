@@ -80,7 +80,10 @@ export default function Stock() {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: PALETTE.primary, paddingTop: "10%", width: "100%" }}>
+        <ScrollView 
+            style={{ backgroundColor: PALETTE.primary, width: "100%" }}
+            contentContainerStyle={{ paddingTop: "10%", paddingBottom: 50 }} 
+        >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={containerStyles.mainContainer}>
                     <Modal visible={visible} animationType='fade' transparent={true}>

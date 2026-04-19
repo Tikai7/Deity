@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Modal, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { containerStyles, PALETTE, textStyles } from '../styles/Styles';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import History from '../components/History';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';

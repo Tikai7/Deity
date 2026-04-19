@@ -185,8 +185,11 @@ export default function Client({
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView style={{ backgroundColor: PALETTE.primary, paddingTop: isIOS ? "27%" : "15%", width: "100%" }}>
-                <View style={containerStyles.clientContainer}>
+            <ScrollView 
+                style={{ backgroundColor: PALETTE.primary, width: "100%" }}
+                contentContainerStyle={{ paddingTop: isIOS ? "27%" : "15%", paddingBottom: 100, flexGrow: 1 }}
+            >                
+            <View style={containerStyles.clientContainer}>
 
                     <View style={{ flex: 1, flexDirection: "row", marginTop: isIOS ? "-10%" : "0%", marginBottom: "10%", justifyContent: "space-around" }}>
                         <TouchableOpacity style={{ marginLeft: "10%", zIndex: 99 }} onPress={handleVisible}>

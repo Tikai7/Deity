@@ -54,7 +54,10 @@ export default function Info({ handleVisible, selectedClient }) {
     }, [handleVisible]);
 
     return (
-        <ScrollView style={{ backgroundColor: PALETTE.primary, paddingTop: isIOS ? "27%" : "15%", width: "100%" }}>
+        <ScrollView 
+            style={{ backgroundColor: PALETTE.primary, width: "100%" }}
+            contentContainerStyle={{ paddingTop: isIOS ? "27%" : "15%", paddingBottom: 50, flexGrow: 1 }}
+        >
             {showHistory && (
                 <Modal visible animationType="slide" onRequestClose={handleHistory}>
                     <HistoryClient handleVisible={handleHistory} clientGroupID={selectedClient?.groupUID} />

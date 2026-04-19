@@ -53,10 +53,10 @@ export const containerStyles = {
 	
 	},
 	clientContainer : {
-        flex : 1,
-        justifyContent : "center",
+        flexGrow : 1,
         alignItems : "center",
         backgroundColor : PALETTE.primary,
+        paddingBottom: 40, 
 	},
 	cakeContainer:{
 		margin:"7%",
@@ -195,6 +195,7 @@ export const textStyles = {
 		borderColor: PALETTE.white,
 		width:"65%",
 		alignSelf:"center",
+        paddingBottom: 4, 
 	},
 	cakePrice: {
 		fontSize: fontStyle.medium,
@@ -206,6 +207,7 @@ export const textStyles = {
 		borderColor: PALETTE.tertiary,
 		width:"65%",
 		alignSelf:"center",
+        paddingBottom: 4,
 	},
 	title:{
 		width:"100%",

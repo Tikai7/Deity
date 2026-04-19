@@ -1,4 +1,4 @@
-ajouter montant
-ajouter historique de commande pour chaque client 
-ajouter card client pas que voir plus
-ajouter histoirque pour stock (lors de la confirmation)
+Ecran stock : boutton confirmer est géné sur Android (tout en bas) 
+Dans commande, voir detail pis plus d'actions y'a pas d'affichage et pareil le btn modifier est gene sur android, et
+en plus (toujorus sur android) on ne voix pas les quantités gateaux 1 et leur prix, tout est cassé decalé ers le haut
+je penses que tout ça est une histoire de padding 
