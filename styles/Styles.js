@@ -186,7 +186,7 @@ export const textStyles = {
         fontWeight: "600",
     },
 	cakeNumber: {
-		fontSize: fontStyle.medium,
+		fontSize: fontStyle.small,
 		fontWeight: "bold",
 		color: PALETTE.white,
 		textAlign: "center",
@@ -198,7 +198,7 @@ export const textStyles = {
         paddingBottom: 4, 
 	},
 	cakePrice: {
-		fontSize: fontStyle.medium,
+		fontSize: fontStyle.small,
 		fontWeight: "bold",
 		color: PALETTE.white,
 		textAlign: "center",

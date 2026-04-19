@@ -184,89 +184,90 @@ export default function Client({
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView 
-                style={{ backgroundColor: PALETTE.primary, width: "100%" }}
-                contentContainerStyle={{ paddingTop: isIOS ? "27%" : "15%", paddingBottom: 100, flexGrow: 1 }}
-            >                
-            <View style={containerStyles.clientContainer}>
+        // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView 
+            style={{ backgroundColor: PALETTE.primary, width: "100%" }}
+            contentContainerStyle={{ paddingTop: isIOS ? "27%" : "15%", paddingBottom: 100, flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+        >                
+        <View style={containerStyles.clientContainer}>
 
-                    <View style={{ flex: 1, flexDirection: "row", marginTop: isIOS ? "-10%" : "0%", marginBottom: "10%", justifyContent: "space-around" }}>
-                        <TouchableOpacity style={{ marginLeft: "10%", zIndex: 99 }} onPress={handleVisible}>
-                            <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
-                        </TouchableOpacity>
-                        <Text style={{ ...textStyles.title, fontSize: 25, marginLeft: "-8%" }}>{title}</Text>
-                    </View>
-
-                    <Modal visible={visible} animationType='fade' transparent={true}>
-                        <Check state={state} title={action !== "Ajouter commande" ? "Client ajouté !" : "Client modifié !"} />
-                    </Modal>
-
-                    <TextInput
-                        defaultValue={action === "Ajouter commande" ? placeholderNom : ""}
-                        maxLength={30} onChangeText={setNom}
-                        placeholder={placeholderNom} placeholderTextColor={PALETTE.tertiary}
-                        style={containerStyles.inputContainer}
-                    />
-                    <TextInput
-                        defaultValue={action === "Ajouter commande" ? placeholderAdresse : ""}
-                        maxLength={40} onChangeText={setAdresse}
-                        placeholder={placeholderAdresse} placeholderTextColor={PALETTE.tertiary}
-                        style={containerStyles.inputContainer}
-                    />
-                    <TextInput
-                        defaultValue={action === "Ajouter commande" ? placeholderSecteur : ""}
-                        maxLength={30} onChangeText={setSecteur}
-                        placeholder={placeholderSecteur} placeholderTextColor={PALETTE.tertiary}
-                        style={containerStyles.inputContainer}
-                    />
-
-                    <View style={{ ...containerStyles.cakeContainer, flexWrap: "wrap" }}>
-                        {cakes.map(cake => (
-                            <View key={cake.id} style={{
-                                    width: "30%", flexDirection: "column", marginBottom: "4%",
-                                    alignItems: "center", justifyContent: "center"
-                                }}>
-                                <Image
-                                    source={typeof cake.image === 'string' ? { uri: cake.image } : cake.image}
-                                    style={containerStyles.cake}
-                                />
-                                <Text style={{ ...textStyles.cakeNumber, fontSize: 10, color: PALETTE.tertiary, marginTop: 4 }}>
-                                    {cake.name}
-                                </Text>
-                                <TextInput
-                                    keyboardType='numeric'
-                                    onChangeText={text => handleQuantityChange(cake.id, text)}
-                                    style={textStyles.cakeNumber}
-                                    placeholder={`${quantities[cake.id] ?? 0}`}
-                                    placeholderTextColor={PALETTE.white}
-                                    maxLength={5}
-                                />
-                                <View style={{ height: "2%" }} />
-                                <TextInput
-                                    keyboardType='numeric'
-                                    onChangeText={text => handlePriceChange(cake.id, text)}
-                                    style={textStyles.cakePrice}
-                                    placeholder={prices[cake.id] ? `${prices[cake.id]} DZD` : "0 DZD"}
-                                    placeholderTextColor={PALETTE.tertiary}
-                                    maxLength={6}
-                                />
-                            </View>
-                        ))}
-                    </View>
-
-                    <View style={{ flex: 0.1 }} />
-                    <TouchableOpacity onPress={() => handleAddClient(false)} style={{ ...buttonStyles.primaryButton, height: 50, marginTop: "4%", marginBottom: "2%" }}>
-                        <Text style={textStyles.secondaryText}>{action}</Text>
+                <View style={{ flex: 1, flexDirection: "row", marginTop: isIOS ? "-10%" : "0%", marginBottom: "10%", justifyContent: "space-around" }}>
+                    <TouchableOpacity style={{ marginLeft: "10%", zIndex: 99 }} onPress={handleVisible}>
+                        <MaterialIcons name="arrow-back" size={30} color={PALETTE.white} />
                     </TouchableOpacity>
-                    {action !== "Ajouter" &&
-                        <TouchableOpacity onPress={() => handleAddClient(true)} style={{ ...buttonStyles.secondaryButton, height: 50 }}>
-                            <Text style={textStyles.primaryText}>Modifier la commande</Text>
-                        </TouchableOpacity>
-                    }
+                    <Text style={{ ...textStyles.title, fontSize: 25, marginLeft: "-8%" }}>{title}</Text>
                 </View>
-                <FlashMessage position="top" style={{ marginTop: isIOS ? "-35%" : "0%" }} />
-            </ScrollView>
-        </TouchableWithoutFeedback>
+
+                <Modal visible={visible} animationType='fade' transparent={true}>
+                    <Check state={state} title={action !== "Ajouter commande" ? "Client ajouté !" : "Client modifié !"} />
+                </Modal>
+
+                <TextInput
+                    defaultValue={action === "Ajouter commande" ? placeholderNom : ""}
+                    maxLength={30} onChangeText={setNom}
+                    placeholder={placeholderNom} placeholderTextColor={PALETTE.tertiary}
+                    style={containerStyles.inputContainer}
+                />
+                <TextInput
+                    defaultValue={action === "Ajouter commande" ? placeholderAdresse : ""}
+                    maxLength={40} onChangeText={setAdresse}
+                    placeholder={placeholderAdresse} placeholderTextColor={PALETTE.tertiary}
+                    style={containerStyles.inputContainer}
+                />
+                <TextInput
+                    defaultValue={action === "Ajouter commande" ? placeholderSecteur : ""}
+                    maxLength={30} onChangeText={setSecteur}
+                    placeholder={placeholderSecteur} placeholderTextColor={PALETTE.tertiary}
+                    style={containerStyles.inputContainer}
+                />
+
+                <View style={{ ...containerStyles.cakeContainer, flexWrap: "wrap" }}>
+                    {cakes.map(cake => (
+                        <View key={cake.id} style={{
+                                width: "30%", flexDirection: "column", marginBottom: "4%",
+                                alignItems: "center", justifyContent: "center"
+                            }}>
+                            <Image
+                                source={typeof cake.image === 'string' ? { uri: cake.image } : cake.image}
+                                style={containerStyles.cake}
+                            />
+                            <Text style={{ ...textStyles.cakeNumber, fontSize: 10, color: PALETTE.tertiary, marginTop: 4 }}>
+                                {cake.name}
+                            </Text>
+                            <TextInput
+                                keyboardType='numeric'
+                                onChangeText={text => handleQuantityChange(cake.id, text)}
+                                style={{ ...textStyles.cakeNumber, padding : 0 }}
+                                placeholder={`${quantities[cake.id] ?? 0}`}
+                                placeholderTextColor={PALETTE.white}
+                                maxLength={5}
+                            />
+                            <View style={{ height: 10 }} />
+                            <TextInput
+                                keyboardType='numeric'
+                                onChangeText={text => handlePriceChange(cake.id, text)}
+                                style={{ ...textStyles.cakePrice, padding : 0 }}
+                                placeholder={prices[cake.id] ? `${prices[cake.id]} DZD` : "0 DZD"}
+                                placeholderTextColor={PALETTE.tertiary}
+                                maxLength={6}
+                            />
+                        </View>
+                    ))}
+                </View>
+
+                <View style={{ flex: 0.1 }} />
+                <TouchableOpacity onPress={() => handleAddClient(false)} style={{ ...buttonStyles.primaryButton, height: 50, marginTop: "4%", marginBottom: "2%" }}>
+                    <Text style={textStyles.secondaryText}>{action}</Text>
+                </TouchableOpacity>
+                {action !== "Ajouter" &&
+                    <TouchableOpacity onPress={() => handleAddClient(true)} style={{ ...buttonStyles.secondaryButton, height: 50 }}>
+                        <Text style={textStyles.primaryText}>Modifier la commande</Text>
+                    </TouchableOpacity>
+                }
+            </View>
+            <FlashMessage position="top" style={{ marginTop: isIOS ? "-35%" : "0%" }} />
+        </ScrollView>
+        // </TouchableWithoutFeedback>
     );
 }
